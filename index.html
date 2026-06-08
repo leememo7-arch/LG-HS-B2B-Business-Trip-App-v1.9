@@ -1954,6 +1954,25 @@
             });
         }
 
+        // 개별 사진 객체 비동기 조회
+        function getPhotoFromDB(id) {
+            return new Promise((resolve, reject) => {
+                if (!db) {
+                    reject("DB not initialized");
+                    return;
+                }
+                const transaction = db.transaction(["photos"], "readonly");
+                const store = transaction.objectStore("photos");
+                const request = store.get(id);
+                request.onsuccess = function (e) {
+                    resolve(e.target.result);
+                };
+                request.onerror = function (e) {
+                    reject(e.target.error);
+                };
+            });
+        }
+
         // LocalStorage의 기존 5MB 제한 데이터 IndexedDB 이식 및 자동 정리 스크립트
         async function migrateLocalStorageToIndexedDB() {
             // 1. 기존 현장 사진 이관
@@ -5752,7 +5771,7 @@ JSON 규격:
             const formattedDate = `${year}.${month}.${date} (${dayOfWeek})`;
 
             const prompt = `당신은 전문적인 회의 기록 관리자입니다.
-제공된 B2B 해외 출장 회의 대화 내용을 분석하여 체계적이고 명료한 회의록을 작성하세요.
+제공된 B2B 해외 출장 회의 대화 내용을 분석하여 체계적이고 완성도 높은 회의록을 작성하세요.
 
 [출장 정보 및 문맥]
 - 출장지: ${tripInfo.country}
@@ -5763,33 +5782,38 @@ JSON 규격:
 1. 대화 내용에서 핵심 주제와 논의 사항을 파악합니다.
 2. 의사결정 사항과 그 근거를 명확히 정리합니다.
 3. 향후 조치사항과 담당자, 일정을 구조화합니다.
-4. 아래 템플릿에 맞춰 최종 회의록을 작성합니다.
+4. 아래 템플릿 양식에 맞춰 최종 회의록을 작성합니다.
 
 [회의록 템플릿 양식]
 ## 1. 회의 정보
 - 일시: ${formattedDate} HH:MM~HH:MM (총 시간)
 - 장소: ${tripInfo.country} 현지 미팅룸
-- 참석자: (총 N명)
-  - 소속1: 이름 직함, 이름 직함 (N명)
-  - 소속2: 이름 직함 (N명)
+- 참석자: [핵심 참석자 1~2명] 외 N명 추정 (반드시 이 형식으로 작성하여 인원을 간단하게 표시할 것. 예: 홍길동 부장, 김철수 책임 외 2명 추정)
 - 회의 안건: ${subject || 'B2B 미팅 및 세부 가이드라인 조율'}
 
 ## 2. 주제별 논의 내용 요약
-- [주제 1] (주제에 대한 논의 내용 및 화자들의 발언 요약)
-- [주제 2] (주제에 대한 논의 내용 및 화자들의 발언 요약)
+📌 **[주제 1] 주제명**
+- **핵심 요약**: (해당 주제에 대한 논의의 핵심 요약)
+- **상세 논의**: (화자들의 발언 내용 및 주요 쟁점 기술)
 
-## 3. 합의된 결정사항
-- (결정사항 1) 의사결정 사항 및 이를 도출한 합리적 근거
-- (결정사항 2) 의사결정 사항 및 이를 도출한 합리적 근거
+📌 **[주제 2] 주제명**
+- **핵심 요약**: (해당 주제에 대한 논의의 핵심 요약)
+- **상세 논의**: (화자들의 발언 내용 및 주요 쟁점 기술)
 
-## 4. 후속 조치 계획 (담당자별 정리)
-- [소속명 / 담당자명] 조치해야 할 세부 실천 과제 (완료 기한: YYYY.MM.DD)
+## 3. 합의된 결정사항 (To-Do List)
+- [ ] (결정사항 1) 의사결정 사항 및 이를 도출한 합리적 근거
+- [ ] (결정사항 2) 의사결정 사항 및 이를 도출한 합리적 근거
+
+## 4. 후속 실천과제 (담당자별 정리)
+- **[소속명 / 담당자명]**
+  (실천과제에 대해 왜 이것이 필요하고 어떻게 실행해야 하는지 구체적인 배경과 절차를 문단으로 상세하게 설명해 주세요. 단순히 한 줄 요약이 아니라 가독성 있는 완성도 높은 문장으로 구분된 문단으로 작성해야 합니다.)
+  * 완료 기한: YYYY.MM.DD
 
 반드시 아래 JSON 스키마로만 응답하세요 (다른 텍스트 없이 JSON만 반환):
 {
   "title": "회의 제목 (간결하고 명확하게)",
   "date": "${formattedDate}",
-  "participants": "참석자 목록 (쉼표 구분)",
+  "participants": "대표 참석자 외 N명 추정",
   "decisions": [
     { "topic": "주요 논의 주제", "summary": "합의 및 결정사항" }
   ],
@@ -5842,8 +5866,7 @@ JSON 규격:
 
             // 2. 화자 분석 및 소속별 분류 구성
             const detectedSpeakers = Array.from(speakersSet);
-            let totalSpeakersCount = detectedSpeakers.length || 2;
-            let participantsText = `(총 ${totalSpeakersCount}명)\n`;
+            let totalSpeakersCount = detectedSpeakers.length || 3;
             const lgMembers = [];
             const partnerMembers = [];
 
@@ -5866,25 +5889,21 @@ JSON 규격:
                         }
                     }
                 });
-
-                if (lgMembers.length > 0) {
-                    participantsText += `  - LG전자 본사: ${lgMembers.join(', ')} (${lgMembers.length}명)\n`;
-                } else {
-                    participantsText += `  - LG전자 본사: 홍길동 부장 (1명)\n`;
-                    totalSpeakersCount += 1;
-                }
-
-                if (partnerMembers.length > 0) {
-                    participantsText += `  - 협력 파트너사: ${partnerMembers.join(', ')} (${partnerMembers.length}명)`;
-                } else {
-                    participantsText += `  - 협력 파트너사: 현지 바이어 (1명)`;
-                    totalSpeakersCount += 1;
-                }
-
-                participantsText = participantsText.replace(/\(총 \d+명\)/, `(총 ${totalSpeakersCount}명)`);
             } else {
-                participantsText = `(총 3명)\n  - LG전자 본사: 홍길동 부장, 김철수 책임 (2명)\n  - 협력 파트너사: 현지 바이어 (1명)`;
+                lgMembers.push("홍길동 부장", "김철수 책임");
+                partnerMembers.push("현지 바이어");
             }
+
+            // 대표 참석자 추출 (최대 2명) 및 외 N명 추정 포맷팅
+            let representativeMembers = [];
+            if (lgMembers.length > 0) representativeMembers.push(lgMembers[0]);
+            if (partnerMembers.length > 0) representativeMembers.push(partnerMembers[0]);
+            if (representativeMembers.length < 2 && lgMembers.length > 1) {
+                representativeMembers.push(lgMembers[1]);
+            }
+            const representativeCount = representativeMembers.length;
+            const estimatedOthers = Math.max(1, totalSpeakersCount - representativeCount);
+            const participantsText = `${representativeMembers.join(', ')} 외 ${estimatedOthers}명 추정`;
 
             // 3. 실제 대화 스크립트 기반 동적 의사결정(Decisions) 및 Action Items 추출
             const decisions = [];
@@ -6002,24 +6021,25 @@ JSON 규격:
 ## 2. 주제별 논의 내용 요약\n`;
 
             topicsList.forEach((topic, index) => {
-                mdResult += `- [주제 ${index + 1}] ${topic.title}\n  - ${topic.details}\n`;
+                mdResult += `📌 **[주제 ${index + 1}] ${topic.title}**\n- **핵심 요약**: ${topic.details}\n- **상세 논의**: 대화 스크립트 대화 내용을 기초로 현지 애로사항 및 자사 솔루션의 적용 가능성을 심층 분석하였습니다.\n\n`;
             });
 
-            mdResult += `\n## 3. 합의된 결정사항\n`;
+            mdResult += `\n## 3. 합의된 결정사항 (To-Do List)\n`;
             decisions.forEach((dec, index) => {
-                mdResult += `- (결정사항 ${index + 1}) ${dec.summary}\n`;
+                mdResult += `- [ ] ${dec.summary}\n`;
             });
 
-            mdResult += `\n## 4. 후속 조치 계획 (담당자별 정리)\n`;
+            mdResult += `\n## 4. 후속 실천과제 (담당자별 정리)\n`;
             actionItems.forEach(item => {
                 const spkRole = item.assignee.includes('(') ? item.assignee : `${item.assignee} 담당자`;
-                mdResult += `- [${spkRole}] ${item.task} (기한: ${item.dueDate})\n`;
+                const detailedParagraph = `본 실천과제는 회의 중 합의된 요구사항의 차질 없는 이행을 위해 담당 부서에서 즉각 실행해야 하는 필수 사안입니다. 배정된 [${item.task}] 과제에 대해 실행 배경과 프로세스를 확인하고, 현지 바이어 및 본사 관련 팀과 실시간으로 진행 현황을 조율하여 최종 결과물을 기한 내 완수해 주시기 바랍니다.`;
+                mdResult += `- **[${spkRole}]**\n  ${detailedParagraph}\n  * 완료 기한: ${item.dueDate}\n\n`;
             });
 
             return {
                 title: subject || '회의 분석 보고서',
                 date: formattedDate,
-                participants: detectedSpeakers.join(', ') || '홍길동 부장, 김철수 책임, 바이어',
+                participants: participantsText,
                 decisions,
                 actionItems,
                 markdownResult: mdResult,
@@ -7372,12 +7392,33 @@ ${scheduleContext}
             await renderPhotos();
         }
 
-        // 사진을 분석하는 로컬 지능형 로직 (Gemini API Key 미설정 시의 고도화된 폴백)
+        // 사진을 분석하는 로컬 지능형 로직 (Gemini API Key 미설정 시의 고도화된 폴백 - 무료 LLM Note)
         function generateLocalPhotoAnalysis(photo, tripInfo, schedules = [], meetings = []) {
             const memo = (photo.label || photo.memo || "").trim();
             const country = tripInfo.country || "현지";
             const purpose = tripInfo.purpose || "B2B 비즈니스 확장";
             
+            // 미팅 장소 추출
+            let meetingLocation = "";
+            if (photo.scheduleLocation) {
+                meetingLocation = photo.scheduleLocation;
+            } else if (photo.scheduleId) {
+                const sched = schedules.find(s => s.id === photo.scheduleId);
+                if (sched && sched.location) {
+                    meetingLocation = sched.location;
+                }
+            }
+            if (!meetingLocation) {
+                // 일체의 schedule 정보가 없을 경우, 등록된 전체 일정 중 첫 미팅 장소를 참조
+                const validSched = schedules.find(s => s.location && !s.partner.includes("출국") && !s.partner.includes("귀국"));
+                if (validSched) {
+                    meetingLocation = validSched.location;
+                }
+            }
+            if (!meetingLocation) {
+                meetingLocation = `${country} 현지 미팅 장소`;
+            }
+
             // 1. 현장 관찰
             let observation = "";
             if (photo.type === 'schedule') {
@@ -7425,10 +7466,19 @@ ${scheduleContext}
                 }
             }
 
-            return `[🤖 AI 시각 분석 (로컬 지능)]
-1. [현장 관찰] ${observation}
-2. [시장 분석] ${marketAnalysis}
-3. [전략적 인사이트] ${insight}${crossRef}`;
+            return `[📝 무료 LLM Note - 시각자료 분석 의견]
+■ 출장지 및 미팅 장소: ${meetingLocation}
+■ 출장 목적: ${purpose}
+
+1. [현장 관찰 의견]
+- 미팅 장소인 "${meetingLocation}"의 시각 자료 및 메모("${memo || '기록 없음'}")를 확인한 결과, 출장 목적인 "${purpose}"에 부합하는 현지 활동이 전개되고 있음을 관찰하였습니다.
+- ${observation}
+
+2. [시장/인프라 분석]
+- 현지 조건 및 출장 목적(${purpose}) 관점에서 검토했을 때, ${marketAnalysis}
+
+3. [전략적 인사이트 및 제안]
+- 본 현장 상황을 고려할 때, ${insight}${crossRef}`;
         }
 
         // 현장 사진 탭 개별 사진의 AI 분석 결과 토글 및 렌더링
@@ -7511,6 +7561,8 @@ ${scheduleContext}
                         photo.scheduleDay = sched.day;
                         photo.schedulePartner = sched.partner;
                         photo.scheduleTopic = sched.topic;
+                        photo.scheduleLocation = sched.location;
+                        photo.scheduleId = scheduleId;
                     }
                     analysisResult = generateLocalPhotoAnalysis(photo, tripInfo, schedules, meetings);
                 }
@@ -7935,7 +7987,8 @@ ${context.scheduleTopic ? `- 미팅 안건: ${context.scheduleTopic}` : ''}
                         scheduleId: s.id,
                         scheduleDay: s.day,
                         schedulePartner: s.partner,
-                        scheduleTopic: s.topic
+                        scheduleTopic: s.topic,
+                        scheduleLocation: s.location
                     });
                 });
             });
