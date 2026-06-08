@@ -8092,6 +8092,12 @@ ${context.scheduleTopic ? `- 미팅 안건: ${context.scheduleTopic}` : ''}
 
                     // 시트 3: 현장 사진 AI 분석 대장
                     const ws3 = workbook.addWorksheet('현장 시각자료 AI분석');
+                    
+                    // 1. 컬럼 너비를 이미지 삽입 전에 반드시 먼저 정의하여 이미지 스케일링의 기준 좌표를 확립합니다.
+                    ws3.columns = [
+                        { width: 8 }, { width: 28 }, { width: 30 }, { width: 24 }, { width: 90 }
+                    ];
+
                     ws3.mergeCells('A1:E1');
                     const titleCell3 = ws3.getCell('A1');
                     titleCell3.value = 'LG전자 B2B 해외 출장 현장 시각 자료 AI 분석 대장';
@@ -8113,7 +8119,7 @@ ${context.scheduleTopic ? `- 미팅 안건: ${context.scheduleTopic}` : ''}
                         cell.alignment = { horizontal: 'center', vertical: 'middle' };
                     }
 
-                    // 사진 행 높이 설정과 실제 이미지 배치 진행
+                    // 2. 텍스트 데이터를 추가하고 각 사진행의 높이를 120pt로 선제 정의합니다.
                     for (let idx = 0; idx < allPhotos.length; idx++) {
                         const ph = allPhotos[idx];
                         const aiResult = aiAnalysisMap[ph.id] || null;
@@ -8121,9 +8127,35 @@ ${context.scheduleTopic ? `- 미팅 안건: ${context.scheduleTopic}` : ''}
 
                         const rowNumber = 5 + idx;
                         const addedRow = ws3.addRow([idx + 1, ph.source, ph.label || "미지정", "", opinion]);
-                        ws3.getRow(rowNumber).height = 120; // 이미지 수용을 위해 행 높이를 120pt로 확장
+                        ws3.getRow(rowNumber).height = 120; // 이미지 수용을 위해 행 높이를 120pt로 미리 확장
+                    }
 
-                        // 실제 이미지 임베딩 처리
+                    if (allPhotos.length === 0) {
+                        ws3.addRow(["", "등록된 현장 사진이 없습니다.", "", "", ""]);
+                    }
+
+                    // 3. 셀 스타일 및 테두리 정렬 처리를 먼저 완전히 완료합니다.
+                    // (이미지 삽입 이후에 getCell(), border, alignment 속성을 건드리면 ExcelJS 내부에서 드로잉 앵커가 해제되거나 깨질 수 있습니다.)
+                    ws3.eachRow((row, rowNumber) => {
+                        if (rowNumber > 3) {
+                            row.font = { name: '맑은 고딕', size: 10 };
+                            row.alignment = { vertical: 'middle', wrapText: true };
+                            row.border = {
+                                top: { style: 'thin', color: { argb: 'FFE0E0E0' } },
+                                bottom: { style: 'thin', color: { argb: 'FFE0E0E0' } },
+                                left: { style: 'thin', color: { argb: 'FFE0E0E0' } },
+                                right: { style: 'thin', color: { argb: 'FFE0E0E0' } }
+                            };
+                            // D열은 사진이 정렬되도록 가로 정렬 center 지정
+                            row.getCell(4).alignment = { horizontal: 'center', vertical: 'middle' };
+                        }
+                    });
+
+                    // 4. 모든 셀 배치, 높이, 스타일 설정이 완료된 최종 격자 구조 위에 실제 사진 이미지를 삽입합니다.
+                    for (let idx = 0; idx < allPhotos.length; idx++) {
+                        const ph = allPhotos[idx];
+                        const rowNumber = 5 + idx;
+
                         try {
                             const dataUrl = ph.dataUrl;
                             if (!dataUrl || dataUrl.length < 100) {
@@ -8132,7 +8164,6 @@ ${context.scheduleTopic ? `- 미팅 안건: ${context.scheduleTopic}` : ''}
                                 continue;
                             }
 
-                            // 정규식 대신 split 기법을 사용하여 name이나 charset 등의 부가 정보가 포함된 데이터 URL도 완벽하게 지원합니다.
                             let mimeType = 'image/png';
                             let base64Data = '';
                             const parts = dataUrl.split(';base64,');
@@ -8142,7 +8173,6 @@ ${context.scheduleTopic ? `- 미팅 안건: ${context.scheduleTopic}` : ''}
                             }
 
                             if (base64Data) {
-                                // 이미지의 MIME 타입에 맞춰 ExcelJS 등록용 확장자(png, jpeg, gif 등)를 동적으로 매칭합니다.
                                 let ext = 'png';
                                 if (mimeType.includes('jpeg') || mimeType.includes('jpg')) {
                                     ext = 'jpeg';
@@ -8157,12 +8187,11 @@ ${context.scheduleTopic ? `- 미팅 안건: ${context.scheduleTopic}` : ''}
                                     extension: ext
                                 });
 
-                                // D열(col index 3)에 이미지를 배치합니다.
-                                // 일부 엑셀 뷰어 및 환경에서 twoCellAnchor가 호환되지 않아 사진이 증발하는 현상을 방지하기 위해,
-                                // 가장 호환성이 높은 고정 크기(ext) 및 oneCellAnchor 방식을 적용합니다.
+                                // D열(col index 3)에 이미지를 정밀 배치합니다.
+                                // oneCell과 고정 크기(ext)를 사용하여 최종 크기가 정해진 셀 안에 안착시킵니다.
                                 ws3.addImage(imageId, {
-                                    tl: { col: 3.05, row: rowNumber - 1 + 0.05 }, // 약간의 마진을 주어 셀 테두리와 겹치지 않게 배치
-                                    ext: { width: 160, height: 140 }, // 셀 크기에 맞춘 고정 픽셀 규격
+                                    tl: { col: 3.05, row: rowNumber - 1 + 0.05 }, // 약간의 마진을 주어 테두리 안쪽에 정렬
+                                    ext: { width: 160, height: 140 },             // 120pt 행 높이와 24컬럼 너비에 완벽 대응하는 사이즈
                                     editAs: 'oneCell'
                                 });
                                 console.log(`엑셀 이미지 ${idx + 1} 임베딩 완료: 행 ${rowNumber}, D열`);
@@ -8175,29 +8204,6 @@ ${context.scheduleTopic ? `- 미팅 안건: ${context.scheduleTopic}` : ''}
                             ws3.getCell(rowNumber, 4).value = '사진 오류';
                         }
                     }
-
-                    if (allPhotos.length === 0) {
-                        ws3.addRow(["", "등록된 현장 사진이 없습니다.", "", "", ""]);
-                    }
-
-                    ws3.eachRow((row, rowNumber) => {
-                        if (rowNumber > 3) {
-                            row.font = { name: '맑은 고딕', size: 10 };
-                            row.alignment = { vertical: 'middle', wrapText: true };
-                            row.border = {
-                                top: { style: 'thin', color: { argb: 'FFE0E0E0' } },
-                                bottom: { style: 'thin', color: { argb: 'FFE0E0E0' } },
-                                left: { style: 'thin', color: { argb: 'FFE0E0E0' } },
-                                right: { style: 'thin', color: { argb: 'FFE0E0E0' } }
-                            };
-                            // D열은 사진이 임베딩되므로 가로 정렬 center
-                            row.getCell(4).alignment = { horizontal: 'center', vertical: 'middle' };
-                        }
-                    });
-
-                    ws3.columns = [
-                        { width: 8 }, { width: 28 }, { width: 30 }, { width: 24 }, { width: 90 }
-                    ];
 
                     // 파일 다운로드
                     const buffer = await workbook.xlsx.writeBuffer();
