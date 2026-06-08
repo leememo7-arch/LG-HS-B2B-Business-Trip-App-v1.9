@@ -8153,11 +8153,11 @@ ${context.scheduleTopic ? `- 미팅 안건: ${context.scheduleTopic}` : ''}
                                 });
 
                                 // D열(col index 3)에 이미지를 배치합니다.
-                                // ExcelJS 4.4.0 호환성 해결을 위해 ext 대신 tl/br과 editAs: 'oneCell' 조합을 사용합니다.
-                                // 행 높이 120pt와 D열 너비 24 기준 셀 영역 내에 딱 맞게 정밀 배치합니다.
+                                // ExcelJS 4.4.0 호환성 및 MS Excel 렌더링 호환성 완벽 준수를 위해 정수형 좌표 tl/br과 editAs: 'oneCell' 조합을 사용합니다.
+                                // 실수형 좌표 사용 시 발생하는 XML 스키마 위반 및 이미지 렌더링 누락 문제를 방지합니다.
                                 ws3.addImage(imageId, {
-                                    tl: { col: 3.05, row: rowNumber - 0.95 },
-                                    br: { col: 3.95, row: rowNumber - 0.05 },
+                                    tl: { col: 3, row: rowNumber - 1 },
+                                    br: { col: 4, row: rowNumber },
                                     editAs: 'oneCell'
                                 });
                                 console.log(`엑셀 이미지 ${idx + 1} 임베딩 완료: 행 ${rowNumber}, D열`);
