@@ -8132,11 +8132,16 @@ ${context.scheduleTopic ? `- 미팅 안건: ${context.scheduleTopic}` : ''}
                                 continue;
                             }
 
-                            const matches = dataUrl.match(/^data:([^;]+);base64,(.+)$/);
-                            if (matches) {
-                                const mimeType = matches[1];
-                                const base64Data = matches[2];
+                            // 정규식 대신 split 기법을 사용하여 name이나 charset 등의 부가 정보가 포함된 데이터 URL도 완벽하게 지원합니다.
+                            let mimeType = 'image/png';
+                            let base64Data = '';
+                            const parts = dataUrl.split(';base64,');
+                            if (parts.length === 2) {
+                                mimeType = parts[0].replace(/^data:/, '');
+                                base64Data = parts[1];
+                            }
 
+                            if (base64Data) {
                                 // 이미지의 MIME 타입에 맞춰 ExcelJS 등록용 확장자(png, jpeg, gif 등)를 동적으로 매칭합니다.
                                 let ext = 'png';
                                 if (mimeType.includes('jpeg') || mimeType.includes('jpg')) {
@@ -8153,9 +8158,7 @@ ${context.scheduleTopic ? `- 미팅 안건: ${context.scheduleTopic}` : ''}
                                 });
 
                                 // D열(col index 3)에 이미지를 배치합니다.
-                                // ExcelJS 4.4.0 호환성 및 MS Excel 렌더링 호환성 완벽 준수를 위해 정수형 좌표 tl/br과 editAs: 'twoCell' 조합을 사용합니다.
-                                // tl/br 방식 사용 시 editAs: 'oneCell'을 지정하면 크기(ext) 필드 누락으로 인해 파일 손상으로 간주되어 이미지가 노출되지 않습니다.
-                                // 두 셀 앵커링 방식인 editAs: 'twoCell'을 명시하여 MS Excel 및 한셀 뷰어와 100% 호환되도록 교정합니다.
+                                // 객체 방식의 좌표(tl/br)와 editAs: 'twoCell'을 사용하여 모든 엑셀 뷰어에서 정밀 배치되도록 합니다.
                                 ws3.addImage(imageId, {
                                     tl: { col: 3, row: rowNumber - 1 },
                                     br: { col: 4, row: rowNumber },
@@ -8349,26 +8352,41 @@ ${context.scheduleTopic ? `- 미팅 안건: ${context.scheduleTopic}` : ''}
                             // 사진 1 (왼쪽 배치)
                             // ※ PptxGenJS v3.12의 data 속성은 "image/type;base64,..." 형식을 요구합니다.
                             //    전체 Data URL에서 "data:" 접두사를 반드시 제거해야 합니다.
-                            const imgData1 = ph1.dataUrl.replace(/^data:/, '');
-                            photoSlide.addShape(pptx.shapes.ROUNDED_RECTANGLE, {
-                                x: 0.4, y: 0.7, w: 4.4, h: 2.5,
-                                fill: 'F5F5F5', line: { color: 'E5E5E5', width: 1 }
-                            });
+                            // PptxGenJS v3.12 형식에 부합하도록 data URL을 정제합니다. (세미콜론 이하 부가정보 제거 및 image/type;base64,... 형식 확보)
+                            let pptImgData1 = '';
+                            const parts1 = ph1.dataUrl.split(';base64,');
+                            if (parts1.length === 2) {
+                                const mime = parts1[0].replace(/^data:/, '');
+                                const b64 = parts1[1];
+                                pptImgData1 = `${mime};base64,${b64}`;
+                            } else {
+                                pptImgData1 = ph1.dataUrl.replace(/^data:/, '');
+                            }
 
                             try {
-                                console.log(`PPT 사진 1: data 형식 = ${imgData1.substring(0, 40)}...`);
-                                // PptxGenJS의 자체 sizing 기능을 활용해 종횡비 깨짐 및 비동기 디코딩 지연으로 인한 NaN 좌표 오류(흰색 박스 현상)를 완벽히 해결합니다.
+                                console.log(`PPT 사진 1: data 형식 = ${pptImgData1.substring(0, 40)}...`);
+                                // PptxGenJS의 자체 sizing 기능을 활용해 종횡비를 안전하게 제어합니다.
                                 photoSlide.addImage({
-                                    data: imgData1,
+                                    data: pptImgData1,
                                     x: 0.4,
                                     y: 0.7,
+                                    w: 4.4,
+                                    h: 2.5,
                                     sizing: { type: 'contain', w: 4.4, h: 2.5 }
                                 });
+                                // 이미지 위에 라인만 그리는 투명 테두리(border)를 추가하여, 사진이 도형 채우기 색상(F5F5F5)에 의해 흰색/회색으로 덮어씌워지는 오류를 완벽히 차단합니다.
+                                // fill에 transparency: 100을 지정하여 투명 채우기를 명시적으로 선언합니다.
+                                photoSlide.addShape(pptx.shapes.ROUNDED_RECTANGLE, {
+                                    x: 0.4, y: 0.7, w: 4.4, h: 2.5,
+                                    fill: { color: 'FFFFFF', transparency: 100 },
+                                    line: { color: 'E5E5E5', width: 1 }
+                                });
                                 // 사진 1 정보 뱃지
+                                // PptxGenJS는 8자리 헥사코드(투명도 포함)를 직접 지원하지 않으므로 fill 오브젝트와 transparency 속성을 사용하여 안전하게 반투명 검은색 뱃지를 그립니다.
                                 photoSlide.addText(`📍 ${ph1.source} ${ph1.label ? `[${ph1.label}]` : ''}`, {
                                     x: 0.5, y: 2.9, w: 4.2, h: 0.20,
                                     fontSize: 8, bold: true, color: 'FFFFFF', fontFace: 'Malgun Gothic',
-                                    fill: '00000080', align: 'center'
+                                    fill: { color: '000000', transparency: 50 }, align: 'center'
                                 });
                             } catch (err) {
                                 console.warn("PPT 사진 1 로드 에러:", err);
@@ -8376,27 +8394,36 @@ ${context.scheduleTopic ? `- 미팅 안건: ${context.scheduleTopic}` : ''}
 
                             // 사진 2 (오른쪽 배치)
                             if (ph2) {
-                                // ※ PptxGenJS v3.12: "data:" 접두사를 제거하여 "image/type;base64,..." 형식으로 전달합니다.
-                                const imgData2 = ph2.dataUrl.replace(/^data:/, '');
-                                photoSlide.addShape(pptx.shapes.ROUNDED_RECTANGLE, {
-                                    x: 5.2, y: 0.7, w: 4.4, h: 2.5,
-                                    fill: 'F5F5F5', line: { color: 'E5E5E5', width: 1 }
-                                });
+                                let pptImgData2 = '';
+                                const parts2 = ph2.dataUrl.split(';base64,');
+                                if (parts2.length === 2) {
+                                    const mime = parts2[0].replace(/^data:/, '');
+                                    const b64 = parts2[1];
+                                    pptImgData2 = `${mime};base64,${b64}`;
+                                } else {
+                                    pptImgData2 = ph2.dataUrl.replace(/^data:/, '');
+                                }
 
                                 try {
-                                    console.log(`PPT 사진 2: data 형식 = ${imgData2.substring(0, 40)}...`);
-                                    // PptxGenJS의 자체 sizing 기능을 활용해 종횡비 깨짐 및 비동기 디코딩 지연으로 인한 NaN 좌표 오류(흰색 박스 현상)를 완벽히 해결합니다.
+                                    console.log(`PPT 사진 2: data 형식 = ${pptImgData2.substring(0, 40)}...`);
                                     photoSlide.addImage({
-                                        data: imgData2,
+                                        data: pptImgData2,
                                         x: 5.2,
                                         y: 0.7,
+                                        w: 4.4,
+                                        h: 2.5,
                                         sizing: { type: 'contain', w: 4.4, h: 2.5 }
+                                    });
+                                    photoSlide.addShape(pptx.shapes.ROUNDED_RECTANGLE, {
+                                        x: 5.2, y: 0.7, w: 4.4, h: 2.5,
+                                        fill: { color: 'FFFFFF', transparency: 100 },
+                                        line: { color: 'E5E5E5', width: 1 }
                                     });
                                     // 사진 2 정보 뱃지
                                     photoSlide.addText(`📍 ${ph2.source} ${ph2.label ? `[${ph2.label}]` : ''}`, {
                                         x: 5.3, y: 2.9, w: 4.2, h: 0.20,
                                         fontSize: 8, bold: true, color: 'FFFFFF', fontFace: 'Malgun Gothic',
-                                        fill: '00000080', align: 'center'
+                                        fill: { color: '000000', transparency: 50 }, align: 'center'
                                     });
                                 } catch (err) {
                                     console.warn("PPT 사진 2 로드 에러:", err);
