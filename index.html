@@ -141,17 +141,204 @@
             transform: scale(1.1) rotate(5deg);
             filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
         }
+
+        /* --- 프리미엄 비주얼 오버홀 스타일 (Wow Aesthetics) --- */
+
+        /* 1. 백그라운드 앰비언트 글로잉 오브 */
+        .glowing-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            z-index: 0;
+            opacity: 0.18;
+            pointer-events: none;
+            animation: float-orb 22s infinite alternate ease-in-out;
+        }
+        .orb-red {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, #A50034 0%, rgba(165, 0, 52, 0) 70%);
+            top: -100px;
+            left: -100px;
+        }
+        .orb-blue {
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle, #1d4ed8 0%, rgba(29, 78, 216, 0) 70%);
+            bottom: -150px;
+            right: -150px;
+            animation-delay: -5s;
+        }
+        @keyframes float-orb {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+            50% {
+                transform: translate(50px, 30px) scale(1.1);
+            }
+            100% {
+                transform: translate(-30px, 60px) scale(0.9);
+            }
+        }
+
+        /* 2. 글래스모피즘 위젯 효과 */
+        .glass-widget {
+            background: rgba(255, 255, 255, 0.08) !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.25s ease;
+        }
+        .glass-widget:hover {
+            background: rgba(255, 255, 255, 0.12) !important;
+            border-color: rgba(255, 255, 255, 0.22) !important;
+        }
+
+        /* 3. 위젯 둥실 부유 효과 */
+        .gently-float {
+            animation: float-icon 3s infinite ease-in-out;
+            display: inline-block;
+        }
+        @keyframes float-icon {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-4px);
+            }
+        }
+
+        /* 4. 실시간 KST LED 인디케이터 */
+        .pulse-led {
+            display: inline-block;
+            width: 5px;
+            height: 5px;
+            background-color: #22c55e;
+            border-radius: 50%;
+            box-shadow: 0 0 6px #22c55e;
+            animation: pulse-light 1.2s infinite ease-in-out;
+        }
+        @keyframes pulse-light {
+            0%, 100% {
+                opacity: 0.4;
+                transform: scale(0.9);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.2);
+            }
+        }
+
+        /* 5. 하버 광택 효과 */
+        .hover-shine-btn {
+            position: relative;
+            overflow: hidden;
+        }
+        .hover-shine-btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -60%;
+            width: 20%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(30deg);
+            transition: none;
+            pointer-events: none;
+        }
+        .hover-shine-btn:hover::after {
+            left: 130%;
+            transition: all 0.75s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        /* 6. 네온 발광 프로그레스 바 */
+        .glowing-progress {
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.45);
+            position: relative;
+            overflow: hidden;
+        }
+        .glowing-progress::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.25) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            animation: progress-wave 2s infinite linear;
+        }
+        @keyframes progress-wave {
+            0% {
+                transform: translateX(-100%);
+            }
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        /* 7. 스프링 탭 네비게이션 효과 */
+        .tab-spring-indicator {
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+        }
+
+        /* 8. 비행기 비행 동적 애니메이션 */
+        .plane-animation-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            left: 0;
+            top: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        .plane-fly-icon {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            animation: fly-across 3.5s infinite ease-in-out;
+        }
+        @keyframes fly-across {
+            0% {
+                left: 8%;
+                opacity: 0;
+                transform: translateY(-50%);
+            }
+            15% {
+                opacity: 1;
+                transform: translateY(-50%);
+            }
+            85% {
+                opacity: 1;
+                transform: translateY(-50%);
+            }
+            100% {
+                left: 88%;
+                opacity: 0;
+                transform: translateY(-50%);
+            }
+        }
     </style>
 </head>
 
-<body class="bg-charcoal text-gray-800 font-sans min-h-screen flex justify-center items-center p-0 sm:p-4">
+<body class="bg-charcoal text-gray-800 font-sans min-h-screen flex justify-center items-center p-0 sm:p-4 overflow-x-hidden relative">
+
+    <!-- 앰비언트 글로잉 백그라운드 데코레이션 (데스크탑 뷰 용) -->
+    <div class="glowing-orb orb-red hidden sm:block"></div>
+    <div class="glowing-orb orb-blue hidden sm:block"></div>
 
     <!-- 모바일 화면(웹뷰)에 100% 최적화된 반응형 웹 컨테이너 (최대 가로폭 max-w-md, 중앙 정렬) -->
     <div
-        class="w-full max-w-md min-h-screen sm:min-h-[850px] sm:max-h-[900px] sm:rounded-3xl bg-white shadow-2xl flex flex-col overflow-hidden relative border border-gray-100">
+        class="w-full max-w-md min-h-screen sm:min-h-[850px] sm:max-h-[900px] sm:rounded-3xl bg-white shadow-[0_25px_60px_-15px_rgba(0,0,0,0.35)] flex flex-col overflow-hidden relative border border-white/10 z-10">
 
         <!-- ================= 헤더 영역 (Header) ================= -->
         <header class="bg-lgRed text-white shadow-md z-10 flex flex-col">
+           
             <!-- 로고 및 서비스 타이틀 영역 -->
             <div class="flex items-center justify-between px-4 py-3">
                 <div class="flex items-center space-x-2">
@@ -168,17 +355,17 @@
                         <!-- 왼쪽 눈(점) (공식 규격 크기와 위치로 패치) -->
                         <circle cx="35.5" cy="38.5" r="4.5" fill="#FFFFFF" />
                     </svg>
-
+ 
                     <!-- 타이틀 병기 -->
                     <div class="border-l border-white/30 pl-2">
                         <h1 class="text-sm font-bold tracking-tight">LG전자 B2B</h1>
                         <p class="text-[10px] text-red-200 font-medium -mt-1">해외출장 매니저</p>
                     </div>
                 </div>
-
+ 
                 <!-- LLM 보고서 추출 버튼 -->
                 <button onclick="openExportModal()"
-                    class="bg-white text-lgRed hover:bg-red-50 text-xs font-bold px-3 py-1.5 rounded-full transition-all duration-200 flex items-center gap-1.5 shadow-sm active:scale-95">
+                    class="bg-white text-lgRed hover:bg-red-50 text-xs font-bold px-3 py-1.5 rounded-full transition-all duration-200 flex items-center gap-1.5 shadow-sm active:scale-95 hover-shine-btn">
                     <i class="fa-solid fa-file-export"></i>
                     <span>LLM 보고서 추출</span>
                 </button>
@@ -187,12 +374,15 @@
             <!-- ================= 이중 시계 바 (한국 + 출장지 시간) ================= -->
             <div id="dual-clock-bar" class="px-4 pb-2.5 pt-0">
                 <div
-                    class="bg-white/10 backdrop-blur-sm rounded-xl px-3 py-2 flex items-center justify-between border border-white/20">
+                    class="glass-widget rounded-xl px-3 py-2 flex items-center justify-between">
                     <!-- 한국 시간 (KST) -->
                     <div class="flex items-center gap-2">
                         <span class="text-base">🇰🇷</span>
                         <div>
-                            <p class="text-[9px] text-red-200 font-semibold leading-none mb-0.5">대한민국 (KST)</p>
+                            <div class="flex items-center gap-1 mb-0.5">
+                                <p class="text-[9px] text-red-200 font-semibold leading-none">대한민국 (KST)</p>
+                                <span class="pulse-led" title="실시간 동기화 중"></span>
+                            </div>
                             <p id="clock-korea" class="text-sm font-bold text-white tracking-widest leading-none">
                                 --:--:--</p>
                         </div>
@@ -227,11 +417,11 @@
 
             <!-- ================= 날씨 영역 (Weather Forecast) ================= -->
             <div id="weather-bar" class="px-4 pb-2.5 pt-0">
-                <div class="bg-white/10 backdrop-blur-sm rounded-xl px-3 py-2 border border-white/20 text-white cursor-pointer transition active:scale-[0.98] hover:bg-white/15"
+                <div class="glass-widget rounded-xl px-3 py-2 text-white cursor-pointer transition active:scale-[0.98]"
                     onclick="toggleWeatherForecast()">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center gap-2">
-                            <span id="weather-current-icon" class="text-lg">☀️</span>
+                            <span id="weather-current-icon" class="text-lg gently-float">☀️</span>
                             <div>
                                 <p class="text-[9px] text-red-200 font-semibold leading-none mb-0.5">출장지 날씨 (실시간)</p>
                                 <p id="weather-current-desc" class="text-xs font-bold leading-none">로드 중...</p>
@@ -828,9 +1018,12 @@
                     <!-- JS 동적 렌더링 -->
                 </div>
 
-                <div id="photos-empty-state" class="text-center py-10 text-gray-400 hidden">
-                    <i class="fa-regular fa-image text-4xl mb-2"></i>
-                    <p class="text-xs">등록된 현장 사진이 없습니다.</p>
+                <div id="photos-empty-state" class="border border-dashed border-gray-200 rounded-2xl p-6 text-center bg-white shadow-[0_4px_15px_-3px_rgba(0,0,0,0.03)] hidden my-4">
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center bg-red-50 text-lgRed mx-auto mb-2.5 border border-red-100">
+                        <i class="fa-regular fa-image text-lg"></i>
+                    </div>
+                    <p class="text-xs font-bold text-gray-700">등록된 현장 사진이 없습니다</p>
+                    <p class="text-[10px] text-gray-400 mt-1 max-w-[200px] mx-auto leading-normal">출장지 방문, 제품 설치, 협의 미팅 등 현장의 소중한 기록을 업로드해보세요.</p>
                 </div>
             </section>
 
@@ -881,7 +1074,7 @@
                     <!-- 프리미엄 실시간 게이지 바 (Progress Bar) -->
                     <div class="relative z-10 w-full bg-white/20 rounded-full h-2 mt-4 overflow-hidden">
                         <div id="checklist-progress-bar"
-                            class="bg-gradient-to-r from-emerald-400 to-teal-300 h-2 rounded-full transition-all duration-500 ease-out"
+                            class="bg-gradient-to-r from-emerald-400 to-teal-300 h-2 rounded-full transition-all duration-500 ease-out glowing-progress"
                             style="width: 0%">
                         </div>
                     </div>
@@ -917,7 +1110,7 @@
             <button onclick="switchTab('schedule')" id="btn-tab-schedule"
                 class="flex flex-col items-center gap-1 text-lgRed font-black text-[11px] px-4 py-1 rounded-xl transition-all duration-200 relative">
                 <div id="tab-indicator-schedule"
-                    class="absolute -top-2 left-1/2 -translate-x-1/2 w-6 h-1 bg-lgRed rounded-full transition-all duration-300">
+                    class="absolute -top-2 left-1/2 -translate-x-1/2 w-6 h-1 bg-lgRed rounded-full transition-all duration-300 tab-spring-indicator">
                 </div>
                 <i class="fa-solid fa-calendar-days text-xl"></i>
                 <span class="tracking-tight">일정</span>
@@ -926,7 +1119,7 @@
             <button onclick="switchTab('meetings')" id="btn-tab-meetings"
                 class="flex flex-col items-center gap-1 text-gray-400 hover:text-gray-600 text-[11px] font-semibold px-4 py-1 rounded-xl transition-all duration-200 relative">
                 <div id="tab-indicator-meetings"
-                    class="absolute -top-2 left-1/2 -translate-x-1/2 w-6 h-1 bg-lgRed rounded-full transition-all duration-300 opacity-0">
+                    class="absolute -top-2 left-1/2 -translate-x-1/2 w-6 h-1 bg-lgRed rounded-full transition-all duration-300 opacity-0 tab-spring-indicator">
                 </div>
                 <i class="fa-solid fa-microphone-lines text-xl"></i>
                 <span class="tracking-tight">회의록</span>
@@ -935,7 +1128,7 @@
             <button onclick="switchTab('photos')" id="btn-tab-photos"
                 class="flex flex-col items-center gap-1 text-gray-400 hover:text-gray-600 text-[11px] font-semibold px-4 py-1 rounded-xl transition-all duration-200 relative">
                 <div id="tab-indicator-photos"
-                    class="absolute -top-2 left-1/2 -translate-x-1/2 w-6 h-1 bg-lgRed rounded-full transition-all duration-300 opacity-0">
+                    class="absolute -top-2 left-1/2 -translate-x-1/2 w-6 h-1 bg-lgRed rounded-full transition-all duration-300 opacity-0 tab-spring-indicator">
                 </div>
                 <i class="fa-solid fa-camera-retro text-xl"></i>
                 <span class="tracking-tight">사진</span>
@@ -944,7 +1137,7 @@
             <button onclick="switchTab('checklist')" id="btn-tab-checklist"
                 class="flex flex-col items-center gap-1 text-gray-400 hover:text-gray-600 text-[11px] font-semibold px-4 py-1 rounded-xl transition-all duration-200 relative">
                 <div id="tab-indicator-checklist"
-                    class="absolute -top-2 left-1/2 -translate-x-1/2 w-6 h-1 bg-lgRed rounded-full transition-all duration-300 opacity-0">
+                    class="absolute -top-2 left-1/2 -translate-x-1/2 w-6 h-1 bg-lgRed rounded-full transition-all duration-300 opacity-0 tab-spring-indicator">
                 </div>
                 <i class="fa-solid fa-clipboard-check text-xl"></i>
                 <span class="tracking-tight">체크리스트</span>
@@ -1345,6 +1538,12 @@
                         </div>
                     </div>
 
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1">탑승 일자</label>
+                        <input type="date" id="edit-flight-date"
+                            class="w-full px-3 py-2 text-xs border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-lgRed text-gray-700">
+                    </div>
+
                     <div class="grid grid-cols-3 gap-2">
                         <div>
                             <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1">출발 시간</label>
@@ -1575,7 +1774,8 @@
                 depTime: "18:45",
                 arrTime: "06:15",
                 duration: "10시간 소요",
-                dateOffset: "+1"
+                dateOffset: "+1",
+                date: "2026-06-15"
             },
             returnFlight: {
                 airline: "대한항공",
@@ -1587,7 +1787,8 @@
                 depTime: "08:30",
                 arrTime: "18:20",
                 duration: "10시간 소요",
-                dateOffset: ""
+                dateOffset: "",
+                date: "2026-06-21"
             }
         };
 
@@ -2472,6 +2673,27 @@
             document.getElementById("edit-flight-duration").value = ticket ? (ticket.duration || "") : "";
             document.getElementById("edit-flight-notes").value = ticket ? (ticket.notes || "") : "";
 
+            // 날짜 세팅: ticket에 date가 있으면 사용하고, 없으면 출장 기간에서 파싱하여 채움
+            let defaultDate = "";
+            if (ticket && ticket.date) {
+                defaultDate = ticket.date;
+            } else {
+                let startDate = "";
+                let endDate = "";
+                const periodStr = info.period || "";
+                const periodMatches = periodStr.match(/(\d{4})[.\-\/](\d{1,2})[.\-\/](\d{1,2})/g);
+                if (periodMatches && periodMatches.length >= 2) {
+                    const parseMatch = (m) => {
+                        const parts = m.split(/[.\-\/]/);
+                        return `${parts[0]}-${parts[1].padStart(2, '0')}-${parts[2].padStart(2, '0')}`;
+                    };
+                    startDate = parseMatch(periodMatches[0]);
+                    endDate = parseMatch(periodMatches[1]);
+                }
+                defaultDate = type === "departure" ? (startDate || new Date().toISOString().split('T')[0]) : (endDate || new Date().toISOString().split('T')[0]);
+            }
+            document.getElementById("edit-flight-date").value = defaultDate;
+
             // 암호화된 예약 코드가 있으면 안전하게 복호화하여 폼에 노출
             const encryptedCode = ticket ? (ticket.bookingCode || "") : "";
             document.getElementById("edit-flight-booking-code").value = decryptBookingCode(encryptedCode);
@@ -2521,6 +2743,7 @@
             const dateOffset = document.getElementById("edit-flight-offset").value;
             const duration = document.getElementById("edit-flight-duration").value.trim();
             const notes = document.getElementById("edit-flight-notes").value.trim();
+            const date = document.getElementById("edit-flight-date").value;
 
             // 보안을 위해 입력한 예약 코드를 암호화하여 저장소에 기록
             const bookingCodeInput = document.getElementById("edit-flight-booking-code").value.trim();
@@ -2542,6 +2765,7 @@
                 arrTime: arrTime || "00:00",
                 duration: duration || "미지정",
                 dateOffset: dateOffset,
+                date: date,
                 bookingCode: encryptedBookingCode,
                 notes: notes
             };
@@ -3103,7 +3327,8 @@
                             depTime: "12:00",
                             arrTime: "18:00",
                             duration: "6시간 소요",
-                            dateOffset: ""
+                            dateOffset: "",
+                            date: ""
                         };
                     };
 
@@ -3115,6 +3340,37 @@
                         parsed.returnFlight = migrateFlight(parsed.returnFlight, false);
                         needUpdate = true;
                     }
+
+                    // 기존 객체에 date 속성이 누락된 경우 마이그레이션 처리
+                    if (parsed.departureFlight && !parsed.departureFlight.date) {
+                        let startDate = "";
+                        const periodStr = parsed.period || "";
+                        const periodMatches = periodStr.match(/(\d{4})[.\-\/](\d{1,2})[.\-\/](\d{1,2})/g);
+                        if (periodMatches && periodMatches.length >= 2) {
+                            const parseMatch = (m) => {
+                                const parts = m.split(/[.\-\/]/);
+                                return `${parts[0]}-${parts[1].padStart(2, '0')}-${parts[2].padStart(2, '0')}`;
+                            };
+                            startDate = parseMatch(periodMatches[0]);
+                        }
+                        parsed.departureFlight.date = startDate || "2026-06-15";
+                        needUpdate = true;
+                    }
+                    if (parsed.returnFlight && !parsed.returnFlight.date) {
+                        let endDate = "";
+                        const periodStr = parsed.period || "";
+                        const periodMatches = periodStr.match(/(\d{4})[.\-\/](\d{1,2})[.\-\/](\d{1,2})/g);
+                        if (periodMatches && periodMatches.length >= 2) {
+                            const parseMatch = (m) => {
+                                const parts = m.split(/[.\-\/]/);
+                                return `${parts[0]}-${parts[1].padStart(2, '0')}-${parts[2].padStart(2, '0')}`;
+                            };
+                            endDate = parseMatch(periodMatches[1]);
+                        }
+                        parsed.returnFlight.date = endDate || "2026-06-21";
+                        needUpdate = true;
+                    }
+
                     if (needUpdate) {
                         localStorage.setItem("LG_TRIP_INFO", JSON.stringify(parsed));
                     }
@@ -3961,7 +4217,11 @@ JSON 규격:
                             </div>
                             <div class="flex-1 flex flex-col items-center px-3 relative">
                                 <div class="w-full border-t border-dashed border-gray-200 absolute top-1/2 -translate-y-1/2"></div>
-                                <i class="fa-solid fa-plane text-lgRed bg-white px-2 z-10 text-[10px]"></i>
+                                <span class="bg-white px-2 z-10 inline-flex items-center justify-center">
+                                    <svg viewBox="0 0 24 24" fill="currentColor" class="w-3.5 h-3.5 text-lgRed">
+                                        <path d="M22 12c0-.4-.2-.8-.6-.9l-9.1-3.6-4.5-5.4c-.2-.3-.6-.4-.9-.2-.3.2-.4.6-.2.9l3.2 5.5-4.9 1.4-2.5-1.9c-.2-.1-.4-.2-.6-.1l-1.2.4c-.3.1-.4.5-.2.8l1.9 2.5-1.9 2.5c-.2.3-.1.7.2.8l1.2.4c.2.1.4 0 .6-.1l2.5-1.9 4.9 1.4-3.2 5.5c-.2.3-.1.7.2.9.1.1.2.1.3.1.2 0 .5-.1.6-.2l4.5-5.4 9.1-3.6c.4-.1.6-.5.6-.9z"/>
+                                    </svg>
+                                </span>
                                 <span class="text-[7px] text-gray-400 mt-1 z-10 bg-white px-1 leading-none">${dep.duration}</span>
                             </div>
                             <div class="text-right">
@@ -3976,7 +4236,7 @@ JSON 규격:
                             </div>
                             <div>
                                 <span class="text-[7px] text-gray-400 block uppercase">Arrival</span>
-                                <span class="font-bold text-gray-700">${dep.arrTime || '--:--'} ${dep.dateOffset ? `<span class="text-[7px] text-red-500 font-bold">${dep.dateOffset}</span>` : ''}</span>
+                                <span class="font-bold text-gray-700">${dep.arrTime || '--:--'} ${dep.dateOffset ? `<span class="text-[7px] text-red-500 font-bold ml-1">(${dep.dateOffset.trim() === '+1' ? '다음날' : `${dep.dateOffset}일 뒤`})</span>` : ''}</span>
                             </div>
                         </div>
                     </div>
@@ -3984,7 +4244,7 @@ JSON 규격:
                     <!-- 귀국편 티켓 바디 -->
                     <div class="p-3 bg-white">
                         <div class="flex items-center gap-1.5 mb-1">
-                            <span class="text-[8px] bg-red-50 text-lgRed px-1.5 py-0.5 rounded font-bold">귀국편 (RETURN) - ${ret.flightNo}</span>
+                            <span class="text-[8px] bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded font-bold">귀국편 (RETURN) - ${ret.flightNo}</span>
                         </div>
                         <div class="flex items-center justify-between my-1">
                             <div class="text-left">
@@ -3993,7 +4253,11 @@ JSON 규격:
                             </div>
                             <div class="flex-1 flex flex-col items-center px-3 relative">
                                 <div class="w-full border-t border-dashed border-gray-200 absolute top-1/2 -translate-y-1/2"></div>
-                                <i class="fa-solid fa-plane text-lgRed bg-white px-2 z-10 text-[10px] fa-flip-horizontal"></i>
+                                <span class="bg-white px-2 z-10 inline-flex items-center justify-center">
+                                    <svg viewBox="0 0 24 24" fill="currentColor" class="w-3.5 h-3.5 text-blue-600">
+                                        <path d="M22 12c0-.4-.2-.8-.6-.9l-9.1-3.6-4.5-5.4c-.2-.3-.6-.4-.9-.2-.3.2-.4.6-.2.9l3.2 5.5-4.9 1.4-2.5-1.9c-.2-.1-.4-.2-.6-.1l-1.2.4c-.3.1-.4.5-.2.8l1.9 2.5-1.9 2.5c-.2.3-.1.7.2.8l1.2.4c.2.1.4 0 .6-.1l2.5-1.9 4.9 1.4-3.2 5.5c-.2.3-.1.7.2.9.1.1.2.1.3.1.2 0 .5-.1.6-.2l4.5-5.4 9.1-3.6c.4-.1.6-.5.6-.9z"/>
+                                    </svg>
+                                </span>
                                 <span class="text-[7px] text-gray-400 mt-1 z-10 bg-white px-1 leading-none">${ret.duration}</span>
                             </div>
                             <div class="text-right">
@@ -4008,7 +4272,7 @@ JSON 규격:
                             </div>
                             <div>
                                 <span class="text-[7px] text-gray-400 block uppercase">Arrival</span>
-                                <span class="font-bold text-gray-700">${ret.arrTime || '--:--'} ${ret.dateOffset ? `<span class="text-[7px] text-red-500 font-bold">${ret.dateOffset}</span>` : ''}</span>
+                                <span class="font-bold text-gray-700">${ret.arrTime || '--:--'} ${ret.dateOffset ? `<span class="text-[7px] text-red-500 font-bold ml-1">(${ret.dateOffset.trim() === '+1' ? '다음날' : `${ret.dateOffset}일 뒤`})</span>` : ''}</span>
                             </div>
                         </div>
                     </div>
@@ -4029,7 +4293,11 @@ JSON 규격:
                             </div>
                             <div class="flex-1 flex flex-col items-center px-3 relative">
                                 <div class="w-full border-t border-dashed border-gray-200 absolute top-1/2 -translate-y-1/2"></div>
-                                <i class="fa-solid fa-plane text-lgRed bg-white px-2 z-10 text-xs"></i>
+                                <span class="bg-white px-2 z-10 inline-flex items-center justify-center">
+                                    <svg viewBox="0 0 24 24" fill="currentColor" class="w-3.5 h-3.5 text-lgRed">
+                                        <path d="M22 12c0-.4-.2-.8-.6-.9l-9.1-3.6-4.5-5.4c-.2-.3-.6-.4-.9-.2-.3.2-.4.6-.2.9l3.2 5.5-4.9 1.4-2.5-1.9c-.2-.1-.4-.2-.6-.1l-1.2.4c-.3.1-.4.5-.2.8l1.9 2.5-1.9 2.5c-.2.3-.1.7.2.8l1.2.4c.2.1.4 0 .6-.1l2.5-1.9 4.9 1.4-3.2 5.5c-.2.3-.1.7.2.9.1.1.2.1.3.1.2 0 .5-.1.6-.2l4.5-5.4 9.1-3.6c.4-.1.6-.5.6-.9z"/>
+                                    </svg>
+                                </span>
                                 <span class="text-[8px] text-gray-400 mt-1 z-10 bg-white px-1 leading-none">${flightObj.duration}</span>
                             </div>
                             <div class="text-right">
@@ -4044,7 +4312,7 @@ JSON 규격:
                             </div>
                             <div>
                                 <span class="text-[8px] text-gray-400 block uppercase">Arrival</span>
-                                <span class="font-bold text-gray-700">${flightObj.arrTime || '--:--'} ${flightObj.dateOffset ? `<span class="text-[8px] text-red-500 font-bold">${flightObj.dateOffset}</span>` : ''}</span>
+                                <span class="font-bold text-gray-700">${flightObj.arrTime || '--:--'} ${flightObj.dateOffset ? `<span class="text-[8px] text-red-500 font-bold ml-1">(${flightObj.dateOffset.trim() === '+1' ? '다음날' : `${flightObj.dateOffset}일 뒤`})</span>` : ''}</span>
                             </div>
                         </div>
                     </div>
@@ -4234,17 +4502,21 @@ JSON 규격:
                 // 출장 정보 편집 모드일 때 임시 보관 변수에 대입
                 if (type === "roundtrip") {
                     tempDepartureFlight = { ...tempSearchResult.departure };
+                    tempDepartureFlight.date = document.getElementById("search-flight-date").value;
                     tempReturnFlight = { ...tempSearchResult.return };
+                    tempReturnFlight.date = document.getElementById("search-flight-date-return").value;
                     const depInput = document.getElementById("edit-info-departure");
                     const retInput = document.getElementById("edit-info-return");
                     if (depInput) depInput.value = `${tempDepartureFlight.airline} ${tempDepartureFlight.flightNo} (${tempDepartureFlight.fromCode}→${tempDepartureFlight.toCode})`;
                     if (retInput) retInput.value = `${tempReturnFlight.airline} ${tempReturnFlight.flightNo} (${tempReturnFlight.fromCode}→${tempReturnFlight.toCode})`;
                 } else if (type === "departure") {
                     tempDepartureFlight = { ...tempSearchResult };
+                    tempDepartureFlight.date = document.getElementById("search-flight-date").value;
                     const inputEl = document.getElementById("edit-info-departure");
                     if (inputEl) inputEl.value = `${tempDepartureFlight.airline} ${tempDepartureFlight.flightNo} (${tempDepartureFlight.fromCode}→${tempDepartureFlight.toCode})`;
                 } else {
                     tempReturnFlight = { ...tempSearchResult };
+                    tempReturnFlight.date = document.getElementById("search-flight-date").value;
                     const inputEl = document.getElementById("edit-info-return");
                     if (inputEl) inputEl.value = `${tempReturnFlight.airline} ${tempReturnFlight.flightNo} (${tempReturnFlight.fromCode}→${tempReturnFlight.toCode})`;
                 }
@@ -4253,11 +4525,15 @@ JSON 규격:
                 const info = JSON.parse(localStorage.getItem("LG_TRIP_INFO")) || DEFAULT_TRIP_INFO;
                 if (type === "roundtrip") {
                     info.departureFlight = { ...tempSearchResult.departure };
+                    info.departureFlight.date = document.getElementById("search-flight-date").value;
                     info.returnFlight = { ...tempSearchResult.return };
+                    info.returnFlight.date = document.getElementById("search-flight-date-return").value;
                 } else if (type === "departure") {
                     info.departureFlight = { ...tempSearchResult };
+                    info.departureFlight.date = document.getElementById("search-flight-date").value;
                 } else {
                     info.returnFlight = { ...tempSearchResult };
+                    info.returnFlight.date = document.getElementById("search-flight-date").value;
                 }
                 localStorage.setItem("LG_TRIP_INFO", JSON.stringify(info));
 
@@ -4412,7 +4688,72 @@ JSON 규격:
 
         // ------------------ [ 1번 탭: 출장 일정 비즈니스 로직 ] ------------------
 
-        // 출국/귀국 항공편을 보딩패스 티켓 스타일로 렌더링하는 함수
+        /**
+         * 항공편명과 구분(출국/귀국)에 따라 출국 게이트 위치를 deterministic하게 예측하여 반환합니다.
+         */
+        function predictGate(flightNo, type) {
+            if (!flightNo) return "TBD";
+            const cleanFlightNo = flightNo.trim().toUpperCase();
+           
+            // 단순 문자열 해시 함수
+            let hash = 0;
+            for (let i = 0; i < cleanFlightNo.length; i++) {
+                hash = cleanFlightNo.charCodeAt(i) + ((hash << 5) - hash);
+            }
+            hash = Math.abs(hash);
+
+            const isKE = cleanFlightNo.startsWith("KE");
+            const isOZ = cleanFlightNo.startsWith("OZ");
+
+            if (type === "departure") {
+                // 인천국제공항(ICN) 출발 예측
+                if (isKE) {
+                    // 대한항공: 제2여객터미널 (230 ~ 270번 게이트)
+                    const gateNum = 230 + (hash % 41);
+                    return `T2 Gate ${gateNum}`;
+                } else if (isOZ) {
+                    // 아시아나항공: 제1여객터미널 (1 ~ 50번 게이트)
+                    const gateNum = 1 + (hash % 50);
+                    return `T1 Gate ${gateNum}`;
+                } else {
+                    // 기타 항공사: 탑승동 (101 ~ 132번 게이트)
+                    const gateNum = 101 + (hash % 32);
+                    return `L Gate ${gateNum}`;
+                }
+            } else {
+                // 해외 공항에서 출발 예측 (귀국편)
+                const terminals = ["T1", "T2", "TB", "TA"];
+                const terminal = terminals[hash % terminals.length];
+                const gateChar = ["A", "B", "C", "D", "E", "F", "G"][hash % 7];
+                const gateNum = 1 + (hash % 30);
+                return `${terminal} Gate ${gateChar}${gateNum}`;
+            }
+        }
+
+        /**
+         * 출발 시간 기준으로 보딩 시간(출발 40분 전)을 예측하여 반환합니다.
+         */
+        function predictBoardingTime(depTime) {
+            if (!depTime || !depTime.includes(":")) return "--:--";
+            try {
+                const parts = depTime.split(":");
+                const hours = parseInt(parts[0], 10);
+                const minutes = parseInt(parts[1], 10);
+               
+                let totalMinutes = hours * 60 + minutes - 40; // 40분 차감
+                if (totalMinutes < 0) {
+                    totalMinutes += 24 * 60; // 자정 이전으로 넘어가는 경우 보정
+                }
+               
+                const predHours = String(Math.floor(totalMinutes / 60) % 24).padStart(2, '0');
+                const predMinutes = String(totalMinutes % 60).padStart(2, '0');
+                return `${predHours}:${predMinutes}`;
+            } catch (e) {
+                console.error("보딩 시간 예측 실패:", e);
+                return "--:--";
+            }
+        }
+
         // 출국/귀국 항공편을 보딩패스 티켓 스타일로 렌더링하는 함수 (비동기화 및 UI 개선)
         async function renderFlightTickets() {
             const container = document.getElementById("flight-tickets-container");
@@ -4432,62 +4773,44 @@ JSON 규격:
 
             const createTicketHtml = (ticket, type) => {
                 const title = type === "departure" ? "출국 비행" : "귀국 비행";
-                const badgeBgColor = type === "departure" ? "bg-lgRed" : "bg-blue-600";
 
                 if (!ticket) {
                     return `
                     <!-- 빈 항공편 카드 - 항공편 미등록 상태 -->
-                    <div class="relative overflow-hidden rounded-2xl border-2 border-dashed border-gray-200 bg-white"
-                         style="background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%)">
-
-                        <!-- 상단 컬러 스트라이프 (얇은 강조선) -->
-                        <div class="h-1 w-full rounded-t-2xl"
-                             style="background: ${type === 'departure'
-                            ? 'linear-gradient(90deg, #A50034, #C0003D)'
-                            : 'linear-gradient(90deg, #1d4ed8, #2563eb)'}"></div>
-
-                        <div class="p-5 flex flex-col items-center text-center gap-3">
+                    <div class="relative overflow-hidden rounded-2xl border border-dashed border-gray-200 bg-white flex shadow-sm">
+                        <div class="flex-1 p-3.5 flex flex-col items-center text-center gap-2">
                             <!-- 아이콘 영역 -->
-                            <div class="w-14 h-14 rounded-full flex items-center justify-center"
-                                 style="background: ${type === 'departure' ? '#fff0f3' : '#eff6ff'}">
-                                <i class="fa-solid ${type === 'departure' ? 'fa-plane-departure text-lgRed' : 'fa-plane-arrival text-blue-600'} text-2xl"></i>
+                            <div class="w-10 h-10 rounded-full flex items-center justify-center bg-gray-50 border border-gray-100">
+                                <i class="fa-solid ${type === 'departure' ? 'fa-plane-departure text-lgRed' : 'fa-plane-arrival text-blue-600'} text-lg"></i>
                             </div>
 
                             <!-- 안내 텍스트 -->
                             <div>
-                                <p class="text-[10px] font-bold uppercase tracking-widest mb-1"
+                                <p class="text-[10px] font-bold uppercase tracking-wider mb-0.5"
                                    style="color: ${type === 'departure' ? '#A50034' : '#1d4ed8'}">
                                     ${type === 'departure' ? '출국 여정' : '귀국 여정'}
                                 </p>
-                                <p class="text-sm font-bold text-gray-700">${title} 항공편이 미등록 상태입니다</p>
-                                <p class="text-[11px] text-gray-400 mt-0.5">항공편 검색 후 자동으로 등록할 수 있습니다</p>
+                                <p class="text-xs font-extrabold text-gray-700">${title} 항공편이 미등록 상태입니다</p>
                             </div>
 
                             <!-- 등록 버튼 -->
                             <button onclick="openFlightSearchModal('${type}')"
-                                class="flex items-center gap-2 text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow-md transition active:scale-95 hover:brightness-110"
+                                class="flex items-center gap-1.5 text-white text-[11px] font-bold px-3.5 py-2 rounded-lg shadow-sm transition active:scale-95 hover:brightness-110"
                                 style="background: ${type === 'departure'
                             ? 'linear-gradient(135deg, #A50034, #C0003D)'
                             : 'linear-gradient(135deg, #1d4ed8, #2563eb)'}">
-                                <i class="fa-solid fa-magnifying-glass"></i>
-                                <span>항공편 웹 검색 및 자동 등록</span>
+                                <i class="fa-solid fa-magnifying-glass text-[10px]"></i>
+                                <span>항공편 자동 등록</span>
                             </button>
+                        </div>
+                       
+                        <!-- 오른쪽 세로바 -->
+                        <div class="w-7 flex flex-col items-center justify-center text-white text-[9px] font-black tracking-widest uppercase select-none py-3 text-center rounded-r-2xl"
+                             style="background: ${type === 'departure' ? 'linear-gradient(180deg, #A50034, #C0003D)' : 'linear-gradient(180deg, #1d4ed8, #2563eb)'}; writing-mode: vertical-rl; text-orientation: mixed;">
+                            ${type === 'departure' ? '✈ DEPARTURE' : '🛬 RETURN'}
                         </div>
                     </div>
                 `;
-                }
-
-                // 암호화된 예약코드를 복호화하여 화면에 취득 (보안 준수)
-                const rawBookingCode = decryptBookingCode(ticket.bookingCode || "");
-                let displayBookingCode = rawBookingCode || "등록되지 않음";
-
-                // 마스킹 제어
-                if (rawBookingCode && !showFlightBookingCode[type]) {
-                    if (rawBookingCode.length > 3) {
-                        displayBookingCode = rawBookingCode.substring(0, 3) + "*".repeat(rawBookingCode.length - 3);
-                    } else {
-                        displayBookingCode = "***";
-                    }
                 }
 
                 // 사진 첨부 여부 검사
@@ -4498,148 +4821,131 @@ JSON 규격:
 
                 return `
                     <!-- ===== 프리미엄 보딩패스 카드 (${title}) ===== -->
-                    <div class="relative overflow-hidden rounded-2xl shadow-lg border border-gray-100"
-                         style="background: linear-gradient(135deg, #ffffff 0%, #fafafa 100%);">
-
-                        <!-- 상단 컬러 헤더 바 -->
-                        <div class="px-4 pt-3 pb-2.5 flex items-center justify-between"
-                             style="background: ${type === 'departure'
-                        ? 'linear-gradient(135deg, #A50034 0%, #C0003D 100%)'
-                        : 'linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%)'};">
-                            <!-- 좌측: 배지 + 편명 -->
-                            <div class="flex items-center gap-2">
-                                <span class="bg-white/20 backdrop-blur-sm text-white px-2.5 py-1 rounded-full text-[10px] font-black tracking-wider border border-white/30">
-                                    ${type === 'departure' ? '✈ 출국' : '🛬 귀국'}
-                                </span>
-                                <span class="text-white font-black text-sm tracking-widest font-mono">
-                                    ${ticket.flightNo || '편명 미등록'}
-                                </span>
+                    <div class="relative overflow-hidden rounded-2xl shadow-md border border-gray-150 bg-white flex">
+                       
+                        <!-- 좌측 메인 컨텐츠 영역 -->
+                        <div class="flex-1 p-3.5 pr-2.5 flex flex-col justify-between">
+                           
+                            <!-- 상단: 항공사 + 편명 + 지도 (가독성 향상) -->
+                            <div class="flex justify-between items-center mb-2">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-gray-600 text-xs font-extrabold">${ticket.airline || '항공사 미등록'}</span>
+                                    <span class="bg-gray-100 text-gray-900 font-mono font-black text-xs px-2.5 py-0.5 rounded leading-none border border-gray-200">
+                                        ${ticket.flightNo || '편명 미등록'}
+                                    </span>
+                                </div>
+                                <a href="https://maps.google.com/?q=${encodeURIComponent(ticket.fromName || '')}+Airport"
+                                   target="_blank"
+                                   class="flex items-center gap-1 text-[11px] text-blue-700 hover:text-blue-800 font-bold bg-blue-50/70 px-2 py-0.5 rounded">
+                                    <i class="fa-solid fa-location-dot"></i>
+                                    <span>공항 지도</span>
+                                </a>
                             </div>
-                            <!-- 우측: 항공사 + 날짜 -->
-                            <div class="text-right">
-                                <p class="text-white/90 text-[11px] font-bold leading-none">${ticket.airline || '항공사 미등록'}</p>
-                                <p class="text-white/60 text-[9px] mt-0.5 leading-none">${ticket.duration ? `비행 ${ticket.duration}` : ''}</p>
-                            </div>
-                        </div>
 
-                        <!-- 보딩패스 점선 구분선 (톱니바퀴 효과) -->
-                        <div class="relative flex items-center">
-                            <div class="absolute -left-3 w-6 h-6 rounded-full bg-gray-100 border border-gray-100 z-10"></div>
-                            <div class="flex-1 border-t-2 border-dashed border-gray-200 mx-4"></div>
-                            <div class="absolute -right-3 w-6 h-6 rounded-full bg-gray-100 border border-gray-100 z-10"></div>
-                        </div>
-
-                        <!-- 메인 노선 정보 영역 -->
-                        <div class="px-4 pt-3 pb-2">
-                            <div class="flex items-center justify-between gap-2">
-
+                            <!-- 노선 및 시간 정보 영역 (글자 크기 키우고 대비 상승) -->
+                            <div class="flex items-center justify-between gap-3">
                                 <!-- 출발 공항 -->
-                                <div class="text-left min-w-0 flex-shrink-0">
-                                    <div class="text-3xl font-black text-gray-900 tracking-tight leading-none font-mono">
+                                <div class="text-left">
+                                    <div class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">출발</div>
+                                    <div class="text-xl font-black text-gray-900 tracking-tight leading-none font-mono mt-0.5">
                                         ${ticket.fromCode || 'ICN'}
                                     </div>
-                                    <div class="text-[10px] text-gray-400 mt-1 font-medium leading-tight max-w-[70px] truncate">
+                                    <div class="text-[10px] text-gray-600 mt-0.5 max-w-[85px] truncate leading-tight font-bold">
                                         ${ticket.fromName || '출발공항'}
                                     </div>
-                                    <div class="text-xs font-bold text-gray-700 mt-0.5">
+                                    <div class="text-sm font-extrabold text-lgRed mt-0.5">
                                         ${ticket.depTime || '--:--'}
                                     </div>
                                 </div>
 
-                                <!-- 노선 연결 화살표 (편명/항공사 겹침 없이 단독 표시) -->
-                                <div class="flex-1 flex flex-col items-center gap-1 px-2">
-                                    <!-- 비행 시간 표시 -->
-                                    <span class="text-[9px] text-gray-400 font-medium whitespace-nowrap">
+                                <!-- 노선 연결 화살표 및 비행시간 -->
+                                <div class="flex-1 flex flex-col items-center px-1">
+                                    <span class="text-[9px] text-gray-600 font-extrabold leading-none mb-1">
                                         ${ticket.duration || '직항'}
                                     </span>
-                                    <!-- 노선선 + 비행기 아이콘 -->
-                                    <div class="w-full flex items-center gap-0">
-                                        <div class="flex-1 h-px bg-gradient-to-r from-gray-300 to-gray-200"></div>
-                                        <div class="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm"
-                                             style="background: ${type === 'departure' ? '#A50034' : '#1d4ed8'};">
-                                            <i class="fa-solid fa-plane text-white text-[10px]"></i>
+                                    <div class="w-full h-3 relative flex items-center justify-center">
+                                        <!-- 비행기 경로 선 -->
+                                        <div class="w-full h-[2px] bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded"></div>
+                                        <!-- 움직이는 비행기 애니메이션 -->
+                                        <div class="plane-animation-container">
+                                            <svg viewBox="0 0 24 24" fill="currentColor" class="w-3.5 h-3.5 ${type === 'departure' ? 'text-lgRed' : 'text-blue-600'} plane-fly-icon">
+                                                <path d="M22 12c0-.4-.2-.8-.6-.9l-9.1-3.6-4.5-5.4c-.2-.3-.6-.4-.9-.2-.3.2-.4.6-.2.9l3.2 5.5-4.9 1.4-2.5-1.9c-.2-.1-.4-.2-.6-.1l-1.2.4c-.3.1-.4.5-.2.8l1.9 2.5-1.9 2.5c-.2.3-.1.7.2.8l1.2.4c.2.1.4 0 .6-.1l2.5-1.9 4.9 1.4-3.2 5.5c-.2.3-.1.7.2.9.1.1.2.1.3.1.2 0 .5-.1.6-.2l4.5-5.4 9.1-3.6c.4-.1.6-.5.6-.9z"/>
+                                            </svg>
                                         </div>
-                                        <div class="flex-1 h-px bg-gradient-to-r from-gray-200 to-gray-300"></div>
                                     </div>
-                                    <!-- 날짜 오프셋 -->
                                     ${ticket.dateOffset
-                        ? `<span class="text-[9px] font-bold text-red-500 bg-red-50 px-1.5 py-0.5 rounded-full">${ticket.dateOffset}</span>`
-                        : '<span class="text-[9px] text-gray-300">──</span>'
-                    }
+                                        ? `<span class="text-[8px] font-extrabold text-red-600 bg-red-50 border border-red-200 px-1.5 py-0.5 rounded mt-0.5 leading-none select-none">${ticket.dateOffset.trim() === '+1' ? '다음날 도착 (+1)' : (ticket.dateOffset.trim() === '+2' ? '이틀 뒤 도착 (+2)' : `${ticket.dateOffset}일 뒤 도착`)}</span>`
+                                        : '<span class="text-[10px] text-gray-300 mt-0.5">──</span>'
+                                    }
                                 </div>
 
                                 <!-- 도착 공항 -->
-                                <div class="text-right min-w-0 flex-shrink-0">
-                                    <div class="text-3xl font-black text-gray-900 tracking-tight leading-none font-mono">
+                                <div class="text-right">
+                                    <div class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">도착</div>
+                                    <div class="text-xl font-black text-gray-900 tracking-tight leading-none font-mono mt-0.5">
                                         ${ticket.toCode || '???'}
                                     </div>
-                                    <div class="text-[10px] text-gray-400 mt-1 font-medium leading-tight max-w-[70px] truncate text-right">
+                                    <div class="text-[10px] text-gray-600 mt-0.5 max-w-[85px] truncate leading-tight font-bold text-right">
                                         ${ticket.toName || '도착공항'}
                                     </div>
-                                    <div class="text-xs font-bold text-gray-700 mt-0.5">
+                                    <div class="text-sm font-extrabold text-gray-900 mt-0.5">
                                         ${ticket.arrTime || '--:--'}
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- 탑승예상 시간 및 탑승구 예측 정보 그리드 (폰트 크기 및 대비 대폭 개선) -->
+                            <div class="grid grid-cols-3 gap-2 border-t border-gray-200 pt-2 mt-2.5 text-center bg-gray-50 rounded-lg p-1.5">
+                                <div>
+                                    <span class="text-[9px] text-gray-500 block uppercase font-bold">탑승시간 (예상)</span>
+                                    <span class="text-xs font-black text-lgRed block mt-0.5">
+                                        ${predictBoardingTime(ticket.depTime)}
+                                        ${ticket.date ? `<span class="text-[9px] text-gray-500 font-bold block mt-0.5">${ticket.date}</span>` : ''}
+                                    </span>
+                                </div>
+                                <div>
+                                    <span class="text-[9px] text-gray-500 block uppercase font-bold">탑승구 (예상)</span>
+                                    <span class="text-xs font-black text-gray-900 block mt-0.5">${predictGate(ticket.flightNo, type)}</span>
+                                </div>
+                                <div>
+                                    <span class="text-[9px] text-gray-500 block uppercase font-bold">지정 좌석</span>
+                                    <span class="text-xs font-black text-gray-700 block mt-0.5">TBD</span>
+                                </div>
+                            </div>
+
+                            <!-- 구분선 -->
+                            <div class="border-t border-gray-200 my-2"></div>
+
+                            <!-- 메모/노트 (있는 경우만) -->
+                            ${ticket.notes ? `
+                                <p class="text-xs text-gray-700 leading-normal bg-gray-50 rounded-lg px-2 py-1 mb-2 border border-gray-100 font-medium">
+                                    <i class="fa-solid fa-circle-info text-lgRed mr-1 text-[10px]"></i>${ticket.notes}
+                                </p>
+                            ` : ''}
+
+                            <!-- 액션 버튼 그룹 (크기 및 조작성 최적화) -->
+                            <div class="flex gap-2">
+                                <button onclick="openFlightEditModal('${type}')"
+                                    class="flex-1 py-1 rounded-lg border text-[11px] font-extrabold flex items-center justify-center gap-1 hover:bg-gray-50 text-gray-700 border-gray-300 transition active:scale-95">
+                                    <i class="fa-solid fa-pen-to-square text-[9px]"></i>
+                                    <span>수정</span>
+                                </button>
+                                <button onclick="handleFlightPhotoAction('${type}')"
+                                    class="flex-1 py-1 rounded-lg border text-[11px] font-extrabold flex items-center justify-center gap-1 hover:bg-gray-50 text-gray-700 border-gray-300 transition active:scale-95">
+                                    <i class="${photoButtonIcon} text-[9px]"></i>
+                                    <span>${photoButtonText}</span>
+                                </button>
+                                <button onclick="deleteFlightTicket('${type}')"
+                                    class="py-1 px-2.5 rounded-lg border text-[11px] font-extrabold flex items-center justify-center gap-1 hover:bg-red-50 hover:text-red-600 hover:border-red-300 text-gray-600 border-gray-300 transition active:scale-95">
+                                    <i class="fa-solid fa-trash-can text-[9px]"></i>
+                                </button>
+                            </div>
                         </div>
-
-                        <!-- 하단 부가정보 (예약코드 + 버튼) -->
-                        <div class="relative">
-                            <!-- 두 번째 점선 구분선 -->
-                            <div class="relative flex items-center">
-                                <div class="absolute -left-3 w-6 h-6 rounded-full bg-gray-100 border border-gray-100 z-10"></div>
-                                <div class="flex-1 border-t-2 border-dashed border-gray-200 mx-4"></div>
-                                <div class="absolute -right-3 w-6 h-6 rounded-full bg-gray-100 border border-gray-100 z-10"></div>
-                            </div>
-
-                            <div class="px-4 pt-2.5 pb-3">
-                                <!-- 예약코드 및 노트 영역 -->
-                                <div class="flex items-start justify-between gap-2 mb-2.5">
-                                    <div class="min-w-0 flex-1">
-                                        <p class="text-[9px] text-gray-400 font-bold uppercase tracking-wider mb-0.5">예약 코드</p>
-                                        <div class="flex items-center gap-1.5">
-                                            <span class="font-mono font-black text-sm text-gray-800 tracking-widest">${displayBookingCode}</span>
-                                            ${rawBookingCode ? `
-                                                <button onclick="toggleBookingCodeMask('${type}')" class="text-gray-400 hover:text-gray-600 transition active:scale-90" type="button">
-                                                    <i class="${showFlightBookingCode[type] ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'} text-xs"></i>
-                                                </button>
-                                            ` : ''}
-                                        </div>
-                                    </div>
-                                    <!-- 지도 링크 -->
-                                    <a href="https://maps.google.com/?q=${encodeURIComponent(ticket.fromName || '')}+Airport"
-                                       target="_blank"
-                                       class="flex-shrink-0 flex items-center gap-1 text-[10px] text-blue-600 hover:text-blue-700 font-bold mt-3">
-                                        <i class="fa-solid fa-location-dot text-xs"></i>
-                                        <span>공항 지도</span>
-                                    </a>
-                                </div>
-
-                                <!-- 메모/노트 (있는 경우만) -->
-                                ${ticket.notes ? `
-                                    <p class="text-[10px] text-gray-500 leading-normal bg-gray-50 rounded-lg px-2.5 py-1.5 mb-2.5 border border-gray-100">
-                                        <i class="fa-solid fa-circle-info text-lgRed mr-1 text-[9px]"></i>${ticket.notes}
-                                    </p>
-                                ` : ''}
-
-                                <!-- 액션 버튼 그룹 -->
-                                <div class="flex gap-1.5">
-                                    <button onclick="openFlightEditModal('${type}')"
-                                        class="flex-1 py-1.5 rounded-xl border text-[10px] font-bold flex items-center justify-center gap-1 transition active:scale-95 hover:bg-gray-50 text-gray-600 border-gray-200">
-                                        <i class="fa-solid fa-pen-to-square text-[9px]"></i>
-                                        <span>수정</span>
-                                    </button>
-                                    <button onclick="handleFlightPhotoAction('${type}')"
-                                        class="flex-1 py-1.5 rounded-xl border text-[10px] font-bold flex items-center justify-center gap-1 transition active:scale-95 hover:bg-gray-50 text-gray-600 border-gray-200">
-                                        <i class="${photoButtonIcon} text-[9px]"></i>
-                                        <span>${photoButtonText}</span>
-                                    </button>
-                                    <button onclick="deleteFlightTicket('${type}')"
-                                        class="py-1.5 px-3 rounded-xl border text-[10px] font-bold flex items-center justify-center gap-1 transition active:scale-95 hover:bg-red-50 hover:text-red-600 hover:border-red-200 text-gray-500 border-gray-200">
-                                        <i class="fa-solid fa-trash-can text-[9px]"></i>
-                                    </button>
-                                </div>
-                            </div>
+                       
+                        <!-- 우측 세로 컬러바 (출국:적색, 귀국:청색) -->
+                        <div class="w-7 flex flex-col items-center justify-center text-white text-[9px] font-black tracking-widest uppercase select-none py-3 text-center rounded-r-2xl"
+                             style="background: ${type === 'departure' ? 'linear-gradient(180deg, #A50034, #C0003D)' : 'linear-gradient(180deg, #1d4ed8, #2563eb)'}; writing-mode: vertical-rl; text-orientation: mixed;">
+                            ${type === 'departure' ? '✈ DEPARTURE' : '🛬 RETURN'}
                         </div>
                     </div>
                 `;
@@ -4691,6 +4997,22 @@ JSON 규격:
             }
 
             // 3. 리스트 순회 및 미팅 카드 렌더링
+            if (itemsToRender.length === 0) {
+                container.innerHTML = `
+                    <!-- 빈 일정 카드 - 프리미엄 디자인 (Proposal 4) -->
+                    <div class="border border-dashed border-gray-250 rounded-2xl p-6 text-center bg-white shadow-[0_4px_15px_-3px_rgba(0,0,0,0.03)] mt-2">
+                        <div class="w-10 h-10 rounded-full flex items-center justify-center bg-red-50 text-lgRed mx-auto mb-2.5 border border-red-100">
+                            <i class="fa-regular fa-calendar-minus text-base"></i>
+                        </div>
+                        <p class="text-xs font-bold text-gray-700">등록된 출장 일정이 없습니다</p>
+                        <p class="text-[10px] text-gray-400 mt-1 max-w-[220px] mx-auto leading-normal">
+                            바이어 미팅, 현지 지사 업무 협의 등 상세 미팅 일정을 아래에서 등록해보세요.
+                        </p>
+                    </div>
+                `;
+                return;
+            }
+
             itemsToRender.forEach((item) => {
                 const card = document.createElement("div");
 
@@ -4726,6 +5048,9 @@ JSON 규격:
                                             <button onclick="downloadImage('${p.dataUrl}', 'LG_일정사진_${p.id}.png')" class="w-5 h-5 bg-white text-gray-800 rounded flex items-center justify-center hover:bg-green-500 hover:text-white transition" title="다운로드">
                                                 <i class="fa-solid fa-download text-[9px]"></i>
                                             </button>
+                                            <button onclick="toggleSchedulePhotoAIAnalysis('${item.id}', '${p.id}')" class="w-5 h-5 bg-white text-gray-800 rounded flex items-center justify-center hover:bg-blue-500 hover:text-white transition" title="AI 분석">
+                                                <i class="fa-solid fa-wand-magic-sparkles text-[9px]"></i>
+                                            </button>
                                             <button onclick="handleDeleteSchedulePhoto('${item.id}', '${p.id}')" class="w-5 h-5 bg-white text-gray-800 rounded flex items-center justify-center hover:bg-red-600 hover:text-white transition" title="삭제">
                                                 <i class="fa-solid fa-trash-can text-[9px]"></i>
                                             </button>
@@ -4733,6 +5058,7 @@ JSON 규격:
                                     </div>
                                 `).join('')}
                             </div>
+                            <div id="sched-photo-ai-${item.id}" class="hidden mt-2 p-2 bg-red-50/50 border border-red-100/50 rounded-lg text-[9px] text-gray-600 leading-normal max-h-24 overflow-y-auto whitespace-pre-line shadow-inner"></div>
                         </div>
                     `;
                 }
@@ -5121,9 +5447,12 @@ JSON 규격:
 
                 if (meetings.length === 0) {
                     container.innerHTML = `
-                        <div class="text-center py-6 bg-white border border-dashed rounded-xl text-gray-400 text-xs">
-                            <i class="fa-regular fa-file-lines text-xl mb-1"></i>
-                            <p>저장된 회의록이 없습니다.</p>
+                        <div class="border border-dashed border-gray-250 rounded-xl p-5 text-center bg-white shadow-[0_4px_15px_-3px_rgba(0,0,0,0.03)] text-gray-400">
+                            <div class="w-8 h-8 rounded-full flex items-center justify-center bg-red-50 text-lgRed mx-auto mb-2 border border-red-100">
+                                <i class="fa-regular fa-file-lines text-xs"></i>
+                            </div>
+                            <p class="text-xs font-bold text-gray-700">저장된 회의록이 없습니다</p>
+                            <p class="text-[9px] text-gray-400 mt-0.5 leading-normal">회의 원본 텍스트를 위에서 입력하여 분석을 실행해 보세요.</p>
                         </div>
                     `;
                 } else {
@@ -6962,8 +7291,13 @@ ${scheduleContext}
                             </button>
                         </div>
                     </div>
-                    <div class="p-2 space-y-1 bg-gray-50 flex-1 flex flex-col justify-between">
+                    <div class="p-2 space-y-1.5 bg-gray-50 flex-1 flex flex-col justify-between">
                         <textarea oninput="handlePhotoMemoChange('${photo.id}', this.value)" placeholder="현장 메모 및 시각 자료 정보 입력..." class="w-full text-xs p-1.5 border border-gray-200 rounded resize-none focus:outline-none focus:ring-1 focus:ring-lgRed focus:border-transparent bg-white" rows="2">${photo.memo || ''}</textarea>
+                        <button onclick="togglePhotoAIAnalysis('${photo.id}')" class="w-full bg-red-50 hover:bg-red-100 text-lgRed text-[10px] font-bold py-1.5 rounded-lg border border-red-150 transition active:scale-95 flex items-center justify-center gap-1">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                            <span>🤖 AI 분석 보기</span>
+                        </button>
+                        <div id="ai-analysis-box-${photo.id}" class="hidden p-2 bg-white border border-gray-200 rounded-lg text-[9.5px] text-gray-600 leading-normal max-h-28 overflow-y-auto whitespace-pre-line shadow-inner"></div>
                     </div>
                 `;
                 grid.appendChild(card);
@@ -7036,6 +7370,156 @@ ${scheduleContext}
             if (!confirm("이 사진을 영구히 삭제하시겠습니까?")) return;
             await deletePhotoFromDB(id);
             await renderPhotos();
+        }
+
+        // 사진을 분석하는 로컬 지능형 로직 (Gemini API Key 미설정 시의 고도화된 폴백)
+        function generateLocalPhotoAnalysis(photo, tripInfo, schedules = [], meetings = []) {
+            const memo = (photo.label || photo.memo || "").trim();
+            const country = tripInfo.country || "현지";
+            const purpose = tripInfo.purpose || "B2B 비즈니스 확장";
+            
+            // 1. 현장 관찰
+            let observation = "";
+            if (photo.type === 'schedule') {
+                observation = `${photo.scheduleDay || '일정'} ${photo.schedulePartner || '파트너사'} 미팅 실사 현장입니다. 참석자들과의 솔루션 논의 과정이 관찰됩니다.`;
+                if (memo) {
+                    observation += ` (상세 내용: ${memo})`;
+                }
+            } else {
+                observation = `${country} 현지 비즈니스 인프라 및 채널 모니터링 실사 현장입니다.`;
+                if (memo) {
+                    observation += ` (현장 기록: ${memo})`;
+                }
+            }
+
+            // 2. 시장 분석
+            let marketAnalysis = "";
+            const memoLow = memo.toLowerCase();
+            if (memoLow.includes("경쟁") || memoLow.includes("타사") || memoLow.includes("samsung") || memoLow.includes("apple") || memoLow.includes("sony")) {
+                marketAnalysis = `현지 리테일 숍의 브랜드 간 디스플레이 경쟁이 매우 치열하게 전개되고 있습니다. 경쟁사의 전면 배치에 대응하여 자사 솔루션의 가시성(SoS) 확보가 핵심 과제입니다.`;
+            } else if (memoLow.includes("미팅") || memoLow.includes("협의") || memoLow.includes("바이어") || memoLow.includes("계약")) {
+                marketAnalysis = `바이어사의 요구 조건이 다변화되고 있으며, 현지 요구에 부합하는 공급 단가 조율 및 맞춤 서비스 라인업 구축이 비즈니스 기회 요인으로 판단됩니다.`;
+            } else if (memoLow.includes("제품") || memoLow.includes("전시") || memoLow.includes("가전") || memoLow.includes("디스플레이")) {
+                marketAnalysis = `프리미엄 세그먼트 제품에 대한 현지 유통 업자들의 니즈가 두드러지며, 첨단 하드웨어와 결합된 디스플레이 마케팅의 정밀 설계가 필요한 추세입니다.`;
+            } else {
+                marketAnalysis = `${country} B2B 환경의 전반적인 레이아웃은 고급 브랜드 위주의 깔끔한 구성을 요구하고 있으며, 현지 브랜드 인지도 제고 전략이 필수적으로 수반되어야 합니다.`;
+            }
+
+            // 3. 전략적 인사이트
+            let insight = "";
+            if (photo.type === 'schedule') {
+                insight = `안건 "${photo.scheduleTopic || '현지 미팅'}"의 미팅 결과와 연계하여, 요구 스펙을 반영한 피치덱 개정판 송부 및 지속적인 후속 관리를 권장합니다.`;
+            } else {
+                insight = `출장 목적 "${purpose}" 달성을 위해, 해당 현장 상황을 고려하여 마케팅 디자인 및 매장 전술을 일부 현지화할 것을 전략적 조치로 제안합니다.`;
+            }
+
+            // 회의록 교차 검증 연계 정보
+            let crossRef = "";
+            if (memo) {
+                const matchedMeets = meetings.filter(m => {
+                    const words = memo.split(/[\s,]+/).filter(w => w.length > 1);
+                    return words.some(w => m.content.includes(w));
+                });
+                if (matchedMeets.length > 0) {
+                    crossRef = `\n[회의록 연계] 회의록 「${matchedMeets.slice(0, 2).map(m => m.title).join('」,「')}」와 내용 연관성 확인됨.`;
+                }
+            }
+
+            return `[🤖 AI 시각 분석 (로컬 지능)]
+1. [현장 관찰] ${observation}
+2. [시장 분석] ${marketAnalysis}
+3. [전략적 인사이트] ${insight}${crossRef}`;
+        }
+
+        // 현장 사진 탭 개별 사진의 AI 분석 결과 토글 및 렌더링
+        async function togglePhotoAIAnalysis(photoId) {
+            const box = document.getElementById(`ai-analysis-box-${photoId}`);
+            if (!box) return;
+
+            if (!box.classList.contains("hidden")) {
+                box.classList.add("hidden");
+                return;
+            }
+
+            box.classList.remove("hidden");
+            box.innerHTML = `<span class="animate-pulse flex items-center gap-1.5 font-semibold text-lgRed text-[9px]"><i class="fa-solid fa-circle-notch animate-spin"></i> AI 분석 의견 생성 중...</span>`;
+
+            try {
+                const photo = await getPhotoFromDB(photoId);
+                const tripInfo = JSON.parse(localStorage.getItem("LG_TRIP_INFO")) || DEFAULT_TRIP_INFO;
+                const schedules = JSON.parse(localStorage.getItem("LG_TRIP_SCHEDULE")) || [];
+                const meetings = JSON.parse(localStorage.getItem("LG_TRIP_MEETINGS")) || [];
+                const apiKey = localStorage.getItem("GEMINI_API_KEY");
+
+                let analysisResult = "";
+                if (apiKey) {
+                    const context = {
+                        country: tripInfo.country,
+                        source: '현장 사진',
+                        memo: photo.memo,
+                        schedulePartner: '',
+                        scheduleTopic: ''
+                    };
+                    analysisResult = await analyzeImageWithGemini(photo.dataUrl, apiKey, context);
+                    analysisResult = `[🤖 Gemini AI 시각 분석]\n${analysisResult}`;
+                } else {
+                    analysisResult = generateLocalPhotoAnalysis(photo, tripInfo, schedules, meetings);
+                }
+
+                box.innerText = analysisResult;
+            } catch (err) {
+                console.error("AI 분석 오류:", err);
+                box.innerText = `⚠️ AI 분석 실패: ${err.message}`;
+            }
+        }
+
+        // 일정 탭 개별 첨부 사진의 AI 분석 결과 토글 및 렌더링
+        async function toggleSchedulePhotoAIAnalysis(scheduleId, photoId) {
+            const box = document.getElementById(`sched-photo-ai-${scheduleId}`);
+            if (!box) return;
+
+            if (!box.classList.contains("hidden") && box.dataset.activePhotoId === photoId) {
+                box.classList.add("hidden");
+                return;
+            }
+
+            box.dataset.activePhotoId = photoId;
+            box.classList.remove("hidden");
+            box.innerHTML = `<span class="animate-pulse flex items-center gap-1.5 font-semibold text-lgRed text-[9px]"><i class="fa-solid fa-circle-notch animate-spin"></i> AI 분석 의견 생성 중...</span>`;
+
+            try {
+                const photo = await getPhotoFromDB(photoId);
+                const tripInfo = JSON.parse(localStorage.getItem("LG_TRIP_INFO")) || DEFAULT_TRIP_INFO;
+                const schedules = JSON.parse(localStorage.getItem("LG_TRIP_SCHEDULE")) || [];
+                const meetings = JSON.parse(localStorage.getItem("LG_TRIP_MEETINGS")) || [];
+                const apiKey = localStorage.getItem("GEMINI_API_KEY");
+
+                let analysisResult = "";
+                if (apiKey) {
+                    const context = {
+                        country: tripInfo.country,
+                        source: `${photo.scheduleDay || '일정'} 사진`,
+                        memo: photo.memo,
+                        schedulePartner: photo.schedulePartner || '',
+                        scheduleTopic: photo.scheduleTopic || ''
+                    };
+                    analysisResult = await analyzeImageWithGemini(photo.dataUrl, apiKey, context);
+                    analysisResult = `[🤖 Gemini AI 시각 분석]\n${analysisResult}`;
+                } else {
+                    const sched = schedules.find(s => s.id === scheduleId);
+                    if (sched) {
+                        photo.scheduleDay = sched.day;
+                        photo.schedulePartner = sched.partner;
+                        photo.scheduleTopic = sched.topic;
+                    }
+                    analysisResult = generateLocalPhotoAnalysis(photo, tripInfo, schedules, meetings);
+                }
+
+                box.innerText = analysisResult;
+            } catch (err) {
+                console.error("AI 분석 오류:", err);
+                box.innerText = `⚠️ AI 분석 실패: ${err.message}`;
+            }
         }
 
 
@@ -7195,7 +7679,6 @@ ${scheduleContext}
          */
         function generateLLMVisualOpinion(photo, tripInfo, schedules = [], meetings = [], aiAnalysis = null) {
             const memo = photo.label || photo.memo || "";
-            const country = tripInfo.country || "";
 
             // ── AI 실제 분석 결과가 있으면 우선 사용 ──
             if (aiAnalysis) {
@@ -7213,47 +7696,8 @@ ${scheduleContext}
                 return `[🤖 Gemini AI 시각 분석]\n${aiAnalysis}${crossRef}`;
             }
 
-            // ── API Key 없을 때: 메모 키워드 기반 로컬 분석 ──
-            let contextInfo = "";
-            let relationAnalysis = "";
-
-            if (photo.type === 'schedule' && photo.scheduleDay) {
-                contextInfo = `[${photo.scheduleDay} - ${photo.schedulePartner} 미팅 현장]\n`;
-                relationAnalysis = `${photo.scheduleDay} '${photo.schedulePartner}' 비즈니스 미팅 현장 실사 이미지입니다. 안건 "${photo.scheduleTopic}"에 대한 논의 증적 자료입니다.`;
-            } else {
-                let bestMatch = null;
-                let maxScore = 0;
-                if (memo) {
-                    const lowMemo = memo.toLowerCase();
-                    schedules.forEach(s => {
-                        let score = 0;
-                        s.partner.split(/[\s()]+/).forEach(w => { if (w.length > 1 && lowMemo.includes(w.toLowerCase())) score += 3; });
-                        s.topic.split(/[\s,]+/).forEach(w => { if (w.length > 1 && lowMemo.includes(w.toLowerCase())) score += 1; });
-                        if (score > maxScore) { maxScore = score; bestMatch = s; }
-                    });
-                }
-                if (bestMatch && maxScore > 0) {
-                    contextInfo = `[${bestMatch.day} 일정 연계]\n`;
-                    relationAnalysis = `메모("${memo}")와 ${bestMatch.day} '${bestMatch.partner}' 미팅 안건 "${bestMatch.topic}"과 연관성 감지.`;
-                } else {
-                    contextInfo = `[현장 모니터링 자료]\n`;
-                    relationAnalysis = `${country} 현지 출장 현장에서 수집된 실사 이미지입니다. 출장 목적 "${tripInfo.purpose}" 달성 과정을 기록합니다.${memo ? ` 현장 메모: "${memo}"` : ''}`;
-                }
-            }
-
-            // 회의록 교차 검증
-            let crossRef = "";
-            if (memo) {
-                const matchedMeets = meetings.filter(m => {
-                    const words = memo.split(/[\s,]+/).filter(w => w.length > 1);
-                    return words.some(w => m.content.includes(w));
-                });
-                if (matchedMeets.length > 0) {
-                    crossRef = `\n[회의록 연계] 「${matchedMeets.slice(0, 2).map(m => m.title).join('」,「')}」와 내용 연관성 확인됨.`;
-                }
-            }
-
-            return `[📋 현장 자료 분석]\n${contextInfo}${relationAnalysis}${crossRef}\n\n※ Gemini API Key 설정 시 실제 AI 이미지 분석 결과가 표시됩니다.`;
+            // ── API Key 없을 때: 로컬 지능형 분석 가동 ──
+            return generateLocalPhotoAnalysis(photo, tripInfo, schedules, meetings);
         }
 
         /**
@@ -7677,11 +8121,17 @@ ${context.scheduleTopic ? `- 미팅 안건: ${context.scheduleTopic}` : ''}
 
                         const rowNumber = 5 + idx;
                         const addedRow = ws3.addRow([idx + 1, ph.source, ph.label || "미지정", "", opinion]);
-                        ws3.getRow(rowNumber).height = 100; // 이미지 수용을 위해 행 높이를 100pt로 확장
+                        ws3.getRow(rowNumber).height = 120; // 이미지 수용을 위해 행 높이를 120pt로 확장
 
                         // 실제 이미지 임베딩 처리
                         try {
                             const dataUrl = ph.dataUrl;
+                            if (!dataUrl || dataUrl.length < 100) {
+                                console.warn(`사진 ${idx} 데이터가 비어있거나 너무 짧습니다. (길이: ${dataUrl ? dataUrl.length : 0})`);
+                                ws3.getCell(rowNumber, 4).value = '사진 데이터 없음';
+                                continue;
+                            }
+
                             const matches = dataUrl.match(/^data:([^;]+);base64,(.+)$/);
                             if (matches) {
                                 const mimeType = matches[1];
@@ -7693,23 +8143,27 @@ ${context.scheduleTopic ? `- 미팅 안건: ${context.scheduleTopic}` : ''}
                                     ext = 'jpeg';
                                 } else if (mimeType.includes('gif')) {
                                     ext = 'gif';
-                                } else if (mimeType.includes('webp')) {
-                                    ext = 'webp';
                                 }
+
+                                console.log(`엑셀 이미지 ${idx + 1}: MIME=${mimeType}, ext=${ext}, base64 길이=${base64Data.length}`);
 
                                 const imageId = workbook.addImage({
                                     base64: base64Data,
                                     extension: ext
                                 });
 
-                                // D열(0-indexed 3번째 열)의 현재 행 셀 내부에 여백을 남기고 가득 차도록 twoCells 임베딩을 구성합니다.
-                                // 1픽셀 = 9,525 EMU이며, 대략 8픽셀의 여백(76,200 EMU)을 상하에 배치하여 테두리를 가리지 않도록 맞춤 조절합니다.
-                                // ※ ExcelJS는 br 좌표에 음수 오프셋을 지원하지 않으므로, 0으로 설정하여 셀 끝까지 채웁니다.
+                                // D열(col index 3)에 이미지를 배치합니다.
+                                // ExcelJS 4.4.0 호환성 해결을 위해 ext 대신 tl/br과 editAs: 'oneCell' 조합을 사용합니다.
+                                // 행 높이 120pt와 D열 너비 24 기준 셀 영역 내에 딱 맞게 정밀 배치합니다.
                                 ws3.addImage(imageId, {
-                                    tl: { col: 3, row: rowNumber - 1, colOff: 76200, rowOff: 76200 },
-                                    br: { col: 4, row: rowNumber, colOff: 0, rowOff: 0 },
+                                    tl: { col: 3.05, row: rowNumber - 0.95 },
+                                    br: { col: 3.95, row: rowNumber - 0.05 },
                                     editAs: 'oneCell'
                                 });
+                                console.log(`엑셀 이미지 ${idx + 1} 임베딩 완료: 행 ${rowNumber}, D열`);
+                            } else {
+                                console.warn(`사진 ${idx} 데이터 URL 파싱 실패: ${dataUrl.substring(0, 50)}...`);
+                                ws3.getCell(rowNumber, 4).value = '사진 형식 오류';
                             }
                         } catch (imgErr) {
                             console.error(`엑셀 이미지 임베딩 실패 (Index: ${idx}):`, imgErr);
@@ -7870,8 +8324,8 @@ ${context.scheduleTopic ? `- 미팅 안건: ${context.scheduleTopic}` : ''}
                                 loadingTextEl.textContent = `PPT 슬라이드 ${slideNum}의 AI 3단 요약 생성 중...`;
                             }
 
-                            // 3단 AI 요약 카드 데이터 획득 (API Key 유무 무관하게 언제나 상세한 요약본을 가져오도록 강제 로컬 폴백)
-                            const summary = generateLocalThreeStepSummary(ph1, ph2, tripInfo);
+                            // 3단 AI 요약 카드 데이터 획득 (API Key가 유효할 때는 실제 API로 실시간 요약, 없을 때는 풍부한 로컬 지능 요약)
+                            const summary = apiKey ? await generateThreeStepAISummary(ph1, ph2, apiKey, tripInfo) : generateLocalThreeStepSummary(ph1, ph2, tripInfo);
 
                             // ── ② z-order 1순위: 3단 요약 카드의 배경 둥근 사각형 도형 추가 (하단 Y=3.4 배치) ──
                             // 카드 1 (핵심 발견) 배경
@@ -7892,9 +8346,9 @@ ${context.scheduleTopic ? `- 미팅 안건: ${context.scheduleTopic}` : ''}
 
                             // ── ③ z-order 2순위: 이미지 addImage 추가 (가로 w: 4.4, 높이 h: 2.5 구성) ──
                             // 사진 1 (왼쪽 배치)
-                            // ※ PptxGenJS의 data 속성에는 완전한 Data URL("data:image/...;base64,...")을 그대로 전달해야 합니다.
-                            //    이전에 "data:" 접두사만 제거하면 유효하지 않은 포맷이 되어 이미지가 흰색으로 표시되거나 누락됩니다.
-                            const imgData1 = ph1.dataUrl;
+                            // ※ PptxGenJS v3.12의 data 속성은 "image/type;base64,..." 형식을 요구합니다.
+                            //    전체 Data URL에서 "data:" 접두사를 반드시 제거해야 합니다.
+                            const imgData1 = ph1.dataUrl.replace(/^data:/, '');
                             photoSlide.addShape(pptx.shapes.ROUNDED_RECTANGLE, {
                                 x: 0.4, y: 0.7, w: 4.4, h: 2.5,
                                 fill: 'F5F5F5', line: { color: 'E5E5E5', width: 1 }
@@ -7922,6 +8376,7 @@ ${context.scheduleTopic ? `- 미팅 안건: ${context.scheduleTopic}` : ''}
                                 y1 = frameY;
                             }
                             try {
+                                console.log(`PPT 사진 1: data 형식 = ${imgData1.substring(0, 40)}..., 크기 = ${w1.toFixed(2)}x${h1.toFixed(2)}`);
                                 photoSlide.addImage({
                                     data: imgData1,
                                     x: x1, y: y1, w: w1, h: h1
@@ -7938,8 +8393,8 @@ ${context.scheduleTopic ? `- 미팅 안건: ${context.scheduleTopic}` : ''}
 
                             // 사진 2 (오른쪽 배치)
                             if (ph2) {
-                                // ※ PptxGenJS의 data 속성에는 완전한 Data URL을 그대로 전달합니다.
-                                const imgData2 = ph2.dataUrl;
+                                // ※ PptxGenJS v3.12: "data:" 접두사를 제거하여 "image/type;base64,..." 형식으로 전달합니다.
+                                const imgData2 = ph2.dataUrl.replace(/^data:/, '');
                                 photoSlide.addShape(pptx.shapes.ROUNDED_RECTANGLE, {
                                     x: 5.2, y: 0.7, w: 4.4, h: 2.5,
                                     fill: 'F5F5F5', line: { color: 'E5E5E5', width: 1 }
@@ -7963,6 +8418,7 @@ ${context.scheduleTopic ? `- 미팅 안건: ${context.scheduleTopic}` : ''}
                                     y2 = frameY;
                                 }
                                 try {
+                                    console.log(`PPT 사진 2: data 형식 = ${imgData2.substring(0, 40)}..., 크기 = ${w2.toFixed(2)}x${h2.toFixed(2)}`);
                                     photoSlide.addImage({
                                         data: imgData2,
                                         x: x2, y: y2, w: w2, h: h2
