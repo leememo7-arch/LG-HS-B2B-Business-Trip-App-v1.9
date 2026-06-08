@@ -8158,11 +8158,12 @@ ${context.scheduleTopic ? `- 미팅 안건: ${context.scheduleTopic}` : ''}
                                 });
 
                                 // D열(col index 3)에 이미지를 배치합니다.
-                                // 객체 방식의 좌표(tl/br)와 editAs: 'twoCell'을 사용하여 모든 엑셀 뷰어에서 정밀 배치되도록 합니다.
+                                // 일부 엑셀 뷰어 및 환경에서 twoCellAnchor가 호환되지 않아 사진이 증발하는 현상을 방지하기 위해,
+                                // 가장 호환성이 높은 고정 크기(ext) 및 oneCellAnchor 방식을 적용합니다.
                                 ws3.addImage(imageId, {
-                                    tl: { col: 3, row: rowNumber - 1 },
-                                    br: { col: 4, row: rowNumber },
-                                    editAs: 'twoCell'
+                                    tl: { col: 3.05, row: rowNumber - 1 + 0.05 }, // 약간의 마진을 주어 셀 테두리와 겹치지 않게 배치
+                                    ext: { width: 160, height: 140 }, // 셀 크기에 맞춘 고정 픽셀 규격
+                                    editAs: 'oneCell'
                                 });
                                 console.log(`엑셀 이미지 ${idx + 1} 임베딩 완료: 행 ${rowNumber}, D열`);
                             } else {
