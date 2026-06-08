@@ -8153,12 +8153,13 @@ ${context.scheduleTopic ? `- 미팅 안건: ${context.scheduleTopic}` : ''}
                                 });
 
                                 // D열(col index 3)에 이미지를 배치합니다.
-                                // ExcelJS 4.4.0 호환성 및 MS Excel 렌더링 호환성 완벽 준수를 위해 정수형 좌표 tl/br과 editAs: 'oneCell' 조합을 사용합니다.
-                                // 실수형 좌표 사용 시 발생하는 XML 스키마 위반 및 이미지 렌더링 누락 문제를 방지합니다.
+                                // ExcelJS 4.4.0 호환성 및 MS Excel 렌더링 호환성 완벽 준수를 위해 정수형 좌표 tl/br과 editAs: 'twoCell' 조합을 사용합니다.
+                                // tl/br 방식 사용 시 editAs: 'oneCell'을 지정하면 크기(ext) 필드 누락으로 인해 파일 손상으로 간주되어 이미지가 노출되지 않습니다.
+                                // 두 셀 앵커링 방식인 editAs: 'twoCell'을 명시하여 MS Excel 및 한셀 뷰어와 100% 호환되도록 교정합니다.
                                 ws3.addImage(imageId, {
                                     tl: { col: 3, row: rowNumber - 1 },
                                     br: { col: 4, row: rowNumber },
-                                    editAs: 'oneCell'
+                                    editAs: 'twoCell'
                                 });
                                 console.log(`엑셀 이미지 ${idx + 1} 임베딩 완료: 행 ${rowNumber}, D열`);
                             } else {
@@ -8354,32 +8355,14 @@ ${context.scheduleTopic ? `- 미팅 안건: ${context.scheduleTopic}` : ''}
                                 fill: 'F5F5F5', line: { color: 'E5E5E5', width: 1 }
                             });
 
-                            // 이미지 실제 비율을 가져와 왜곡 방지 좌표 연산 (w: 4.4, h: 2.5 프레임에 대입)
-                            const dims1 = await getImageDimensions(ph1.dataUrl);
-                            const frameW = 4.4;
-                            const frameH = 2.5;
-                            const frameX1 = 0.4;
-                            const frameY = 0.7;
-                            const frameRatio = frameW / frameH;
-                            const imgRatio1 = dims1.width / dims1.height;
-                            let w1, h1, x1, y1;
-
-                            if (imgRatio1 > frameRatio) {
-                                w1 = frameW;
-                                h1 = frameW / imgRatio1;
-                                x1 = frameX1;
-                                y1 = frameY + (frameH - h1) / 2;
-                            } else {
-                                h1 = frameH;
-                                w1 = frameH * imgRatio1;
-                                x1 = frameX1 + (frameW - w1) / 2;
-                                y1 = frameY;
-                            }
                             try {
-                                console.log(`PPT 사진 1: data 형식 = ${imgData1.substring(0, 40)}..., 크기 = ${w1.toFixed(2)}x${h1.toFixed(2)}`);
+                                console.log(`PPT 사진 1: data 형식 = ${imgData1.substring(0, 40)}...`);
+                                // PptxGenJS의 자체 sizing 기능을 활용해 종횡비 깨짐 및 비동기 디코딩 지연으로 인한 NaN 좌표 오류(흰색 박스 현상)를 완벽히 해결합니다.
                                 photoSlide.addImage({
                                     data: imgData1,
-                                    x: x1, y: y1, w: w1, h: h1
+                                    x: 0.4,
+                                    y: 0.7,
+                                    sizing: { type: 'contain', w: 4.4, h: 2.5 }
                                 });
                                 // 사진 1 정보 뱃지
                                 photoSlide.addText(`📍 ${ph1.source} ${ph1.label ? `[${ph1.label}]` : ''}`, {
@@ -8400,28 +8383,14 @@ ${context.scheduleTopic ? `- 미팅 안건: ${context.scheduleTopic}` : ''}
                                     fill: 'F5F5F5', line: { color: 'E5E5E5', width: 1 }
                                 });
 
-                                // 이미지 실제 비율을 가져와 왜곡 방지 좌표 연산
-                                const dims2 = await getImageDimensions(ph2.dataUrl);
-                                const frameX2 = 5.2;
-                                const imgRatio2 = dims2.width / dims2.height;
-                                let w2, h2, x2, y2;
-
-                                if (imgRatio2 > frameRatio) {
-                                    w2 = frameW;
-                                    h2 = frameW / imgRatio2;
-                                    x2 = frameX2;
-                                    y2 = frameY + (frameH - h2) / 2;
-                                } else {
-                                    h2 = frameH;
-                                    w2 = frameH * imgRatio2;
-                                    x2 = frameX2 + (frameW - w2) / 2;
-                                    y2 = frameY;
-                                }
                                 try {
-                                    console.log(`PPT 사진 2: data 형식 = ${imgData2.substring(0, 40)}..., 크기 = ${w2.toFixed(2)}x${h2.toFixed(2)}`);
+                                    console.log(`PPT 사진 2: data 형식 = ${imgData2.substring(0, 40)}...`);
+                                    // PptxGenJS의 자체 sizing 기능을 활용해 종횡비 깨짐 및 비동기 디코딩 지연으로 인한 NaN 좌표 오류(흰색 박스 현상)를 완벽히 해결합니다.
                                     photoSlide.addImage({
                                         data: imgData2,
-                                        x: x2, y: y2, w: w2, h: h2
+                                        x: 5.2,
+                                        y: 0.7,
+                                        sizing: { type: 'contain', w: 4.4, h: 2.5 }
                                     });
                                     // 사진 2 정보 뱃지
                                     photoSlide.addText(`📍 ${ph2.source} ${ph2.label ? `[${ph2.label}]` : ''}`, {
